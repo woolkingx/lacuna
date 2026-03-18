@@ -1,0 +1,102 @@
+diff --git a/browser/components/preferences/jar.mn b/browser/components/preferences/jar.mn
+index 118709048e..e4486af049 100644
+--- a/browser/components/preferences/jar.mn
++++ b/browser/components/preferences/jar.mn
+@@ -11,6 +11,7 @@ browser.jar:
+    content/browser/preferences/home.js
+    content/browser/preferences/search.js
+    content/browser/preferences/privacy.js
++   content/browser/preferences/lacuna.js                  (../preferences/lacuna.js)
+    content/browser/preferences/containers.js
+    content/browser/preferences/translations.js
+    content/browser/preferences/sync.js
+
+diff --git a/browser/components/preferences/preferences.js b/browser/components/preferences/preferences.js
+index b5af9af69f..9320554953 100644
+--- a/browser/components/preferences/preferences.js
++++ b/browser/components/preferences/preferences.js
+@@ -9,6 +9,7 @@
+ /* import-globals-from containers.js */
+ /* import-globals-from translations.js */
+ /* import-globals-from privacy.js */
++/* import-globals-from lacuna.js */
+ /* import-globals-from sync.js */
+ /* import-globals-from experimental.js */
+ /* import-globals-from moreFromMozilla.js */
+@@ -195,6 +196,7 @@ function init_all() {
+   register_module("paneHome", gHomePane);
+   register_module("paneSearch", gSearchPane);
+   register_module("panePrivacy", gPrivacyPane);
++  register_module("paneLacuna",                gLacunaPane);
+   register_module("paneContainers", gContainersPane);
+ 
+   if (Services.prefs.getBoolPref("browser.translations.newSettingsUI.enable")) {
+
+diff --git a/browser/components/preferences/preferences.xhtml b/browser/components/preferences/preferences.xhtml
+index 04c8a45a67..cad753a3ce 100644
+--- a/browser/components/preferences/preferences.xhtml
++++ b/browser/components/preferences/preferences.xhtml
+@@ -42,6 +42,7 @@
+     href="chrome://browser/skin/preferences/containers.css"
+   />
+   <link rel="stylesheet" href="chrome://browser/skin/preferences/privacy.css" />
++  <link rel="stylesheet" href="chrome://browser/skin/preferences/lacuna.css"/>
+   <link rel="stylesheet" href="chrome://browser/content/preferences/widgets/setting-group.css" />
+ 
+   <link rel="localization" href="branding/brand.ftl"/>
+@@ -147,6 +148,17 @@
+           <label class="category-name" flex="1" data-l10n-id="pane-privacy-title"></label>
+         </richlistitem>
+ 
++        <richlistitem id="category-lacuna"
++                      class="category"
++                      value="paneLacuna"
++                      helpTopic="prefs-lacuna"
++                      data-l10n-id="category-lacuna"
++                      data-l10n-attrs="tooltiptext"
++                      align="center">
++          <image class="category-icon"/>
++          <label class="category-name" flex="1" data-l10n-id="pane-lacuna-title"/>
++        </richlistitem>
++
+         <richlistitem id="category-sync"
+                       class="category"
+                       hidden="true"
+@@ -241,6 +253,7 @@
+ #include home.inc.xhtml
+ #include search.inc.xhtml
+ #include privacy.inc.xhtml
++#include lacuna.inc.xhtml
+ #include containers.inc.xhtml
+ #include translations.inc.xhtml
+ #include sync.inc.xhtml
+
+diff --git a/browser/themes/shared/jar.inc.mn b/browser/themes/shared/jar.inc.mn
+index bf61cf8a4b..fbad111abe 100644
+--- a/browser/themes/shared/jar.inc.mn
++++ b/browser/themes/shared/jar.inc.mn
+@@ -115,6 +115,8 @@
+   skin/classic/browser/preferences/android-menu.svg            (../shared/preferences/android-menu.svg)
+   skin/classic/browser/preferences/category-general.svg        (../shared/preferences/category-general.svg)
+   skin/classic/browser/preferences/category-privacy-security.svg    (../shared/preferences/category-privacy-security.svg)
++  skin/classic/browser/preferences/category-lacuna.svg    (../shared/preferences/category-lacuna.svg)
++  skin/classic/browser/preferences/lacuna.css              (../shared/preferences/lacuna.css)
+   skin/classic/browser/preferences/category-search.svg         (../shared/preferences/category-search.svg)
+   skin/classic/browser/preferences/category-sync.svg           (../shared/preferences/category-sync.svg)
+   skin/classic/browser/preferences/containers.css              (../shared/preferences/containers.css)
+
+diff --git a/browser/themes/shared/preferences/preferences.css b/browser/themes/shared/preferences/preferences.css
+index 30aafeb797..ebed5f114d 100644
+--- a/browser/themes/shared/preferences/preferences.css
++++ b/browser/themes/shared/preferences/preferences.css
+@@ -223,6 +223,10 @@ radio {
+   list-style-image: url("chrome://browser/skin/preferences/category-privacy-security.svg");
+ }
+ 
++#category-lacuna > .category-icon {
++  list-style-image: url("chrome://browser/skin/preferences/category-lacuna.svg");
++}
++
+ #category-sync > .category-icon {
+   list-style-image: url("chrome://browser/skin/preferences/category-sync.svg");
+ }

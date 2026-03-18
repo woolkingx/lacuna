@@ -1,0 +1,17 @@
+{
+  "description": "Privacy preferences for security",
+  "category": "security",
+  "directory": "133-security",
+  "preferences": {
+    "security.remote_settings.intermediates.enabled": true,
+    "security.remote_settings.crlite_filters.enabled": false,
+    "security.OCSP.enabled": 0,
+    "security.OCSP.require": false,
+    "security.ssl.enable_ocsp_must_staple": false,
+    "security.enterprise_roots.enabled": true,
+    "security.certerrors.mitm.priming.enabled": false,
+    "security.tls.enable_0rtt_data": false,
+    "security.ssl.treat_unsafe_negotiation_as_broken": true,
+    "security.csp.reporting.enabled": false
+  }
+}

@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!--
+    Lacuna Browser Logo — Isometric Wireframe Cube + Flame
+    Geometry (viewBox 128×128, center cx=64, cy=64):
+      Cube: w=28 (half-width), h=16 (face height)
+      Top face diamond:  top(64,32)  right(92,48)  bottom(64,64)  left(36,48)
+      Left face bottom:  bl(36,80)   bc(64,96)
+      Right face bottom: br(92,80)   bc(64,96)
+      Flame: center x=64, base y=85, tip y=44
+  -->
+  <defs>
+    <!-- Flame gradient: deep orange → bright yellow -->
+    <linearGradient id="flameGrad" x1="0.5" y1="1" x2="0.5" y2="0">
+      <stop offset="0%" stop-color="#ff6b1a"/>
+      <stop offset="60%" stop-color="#ff9900"/>
+      <stop offset="100%" stop-color="#ffcc00"/>
+    </linearGradient>
+
+    <!-- Glow filter for flame -->
+    <filter id="flameGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <!-- Subtle vignette/depth for background -->
+    <radialGradient id="bgGrad" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#252545"/>
+      <stop offset="100%" stop-color="#1a1a2e"/>
+    </radialGradient>
+  </defs>
+
+  <!-- ── Layer 1: Background ── -->
+  <rect x="0" y="0" width="128" height="128" rx="26" ry="26" fill="url(#bgGrad)"/>
+
+  <!-- ── Layer 2: Flame ── -->
+  <!--
+    Outer flame body:
+    Start at base (64,85), curve left up to (48,52), arc to tip (64,44),
+    curve right down through (80,52), return to base.
+    Inner highlight adds depth.
+  -->
+  <path
+    d="M 64,85
+       C 44,78 40,63 48,52
+       C 52,46 56,40 64,44
+       C 72,40 76,46 80,52
+       C 88,63 84,78 64,85
+       Z"
+    fill="url(#flameGrad)"
+    filter="url(#flameGlow)"
+    opacity="0.95"
+  />
+
+  <!-- Inner flame core (brighter, narrower) -->
+  <path
+    d="M 64,78
+       C 55,72 53,63 57.5,56
+       C 59.5,52 62,49 64,51
+       C 66,49 68.5,52 70.5,56
+       C 75,63 73,72 64,78
+       Z"
+    fill="#ffee88"
+    opacity="0.6"
+  />
+
+  <!-- ── Layer 3: Isometric cube wireframe ── -->
+  <!--
+    Vertices:
+      top    = (64, 32)
+      right  = (92, 48)
+      bottom = (64, 64)
+      left   = (36, 48)
+      bl     = (36, 80)
+      bc     = (64, 96)
+      br     = (92, 80)
+
+    9 visible edges (bottom→bc shared by both faces, drawn once):
+      Top face:   top→right, right→bottom, bottom→left, left→top
+      Left face:  left→bl, bl→bc, bc→bottom
+      Right face: right→br, br→bc
+      (bottom→bc already drawn for left face)
+  -->
+  <g
+    stroke="rgba(255,255,255,0.85)"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  >
+    <!-- Top face (diamond) -->
+    <line x1="64" y1="32" x2="92" y2="48"/>
+    <line x1="92" y1="48" x2="64" y2="64"/>
+    <line x1="64" y1="64" x2="36" y2="48"/>
+    <line x1="36" y1="48" x2="64" y2="32"/>
+
+    <!-- Left face pillar edges -->
+    <line x1="36" y1="48" x2="36" y2="80"/>
+    <line x1="36" y1="80" x2="64" y2="96"/>
+    <line x1="64" y1="64" x2="64" y2="96"/>
+
+    <!-- Right face pillar edges -->
+    <line x1="92" y1="48" x2="92" y2="80"/>
+    <line x1="92" y1="80" x2="64" y2="96"/>
+  </g>
+</svg>

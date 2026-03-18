@@ -1,0 +1,8 @@
+{
+  "description": "Privacy preferences for beacon",
+  "category": "beacon",
+  "directory": "110-dom",
+  "preferences": {
+    "beacon.enabled": false
+  }
+}

@@ -1,0 +1,18 @@
+diff --git a/services/settings/Attachments.sys.mjs b/services/settings/Attachments.sys.mjs
+index af76aca084..b5aa4ac5f2 100644
+--- a/services/settings/Attachments.sys.mjs
++++ b/services/settings/Attachments.sys.mjs
+@@ -355,6 +355,13 @@ export class Downloader {
+       fallbackToDump = false;
+     }
+ 
++    // LACUNA PATCH: Force local fallback when RS disabled
++    if (Services.prefs.getBoolPref("patch.services.settings.fallback.enabled", true)) {
++      fallbackToCache = true;
++      fallbackToDump = true;
++    }
++    // END LACUNA PATCH
++
+     const dumpInfo = new LazyRecordAndBuffer(() =>
+       this._readAttachmentDump(attachmentId)
+     );

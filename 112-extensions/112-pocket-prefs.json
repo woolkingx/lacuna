@@ -1,0 +1,10 @@
+{
+  "description": "Privacy preferences for Pocket",
+  "category": "extensions",
+  "directory": "112-extensions",
+  "preferences": {
+    "extensions.pocket.enabled": false,
+    "extensions.pocket.api": "",
+    "extensions.pocket.site": ""
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "description": "Privacy preferences for network",
+  "category": "network",
+  "directory": "127-netwerk",
+  "preferences": {
+    "network.captive-portal-service.enabled": false,
+    "network.connectivity-service.enabled": false,
+    "network.prefetch-next": false,
+    "network.predictor.enabled": false,
+    "network.predictor.enable-prefetch": false,
+    "network.http.network_error_logging.enabled": false,
+    "network.http.idempotencyKey.enabled": false,
+    "network.trr.use_ohttp": false,
+    "network.proxy.allow_bypass": false,
+    "network.proxy.failover_direct": false,
+    "network.preconnect": false,
+    "network.early-hints.enabled": false,
+    "network.early-hints.preconnect.enabled": false,
+    "network.trr.confirmation_telemetry_enabled": false,
+    "network.http.speculative-parallel-limit": 0,
+    "network.trr.mode": 5,
+    "network.dns.disablePrefetch": true,
+    "network.IDN_show_punycode": true
+  }
+}

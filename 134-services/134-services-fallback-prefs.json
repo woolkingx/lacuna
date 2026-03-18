@@ -1,0 +1,11 @@
+{
+  "description": "Force RS local fallback (fallbackToCache + fallbackToDump + LOAD_DUMPS)",
+  "category": "services",
+  "directory": "134-services",
+  "preferences": {
+    "patch.services.settings.fallback.enabled": {
+      "value": true,
+      "description": "Forces RemoteSettings to use local fallback (cache + dump) instead of network."
+    }
+  }
+}

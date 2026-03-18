@@ -1,0 +1,14 @@
+diff --git a/modules/libpref/moz.build b/modules/libpref/moz.build
+index 4e582caaa5..1fa32d1da4 100644
+--- a/modules/libpref/moz.build
++++ b/modules/libpref/moz.build
+@@ -70,6 +70,9 @@ pref_groups = [
+     "network",
+     "nglayout",
+     "page_load",
++    # LACUNA PATCH: Add "patch" pref group for all patch.* preferences
++    "patch",
++    # END LACUNA PATCH
+     "pdfjs",
+     "permissions",
+     "places",

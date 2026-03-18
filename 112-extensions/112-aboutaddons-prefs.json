@@ -1,0 +1,11 @@
+{
+  "description": "Privacy preferences for about:addons recommendations",
+  "category": "extensions",
+  "directory": "112-extensions",
+  "preferences": {
+    "patch.extensions.htmlaboutaddons.recommendations.enabled": {
+      "value": true,
+      "description": "Blocks the about:addons Discovery API from fetching extension recommendations."
+    }
+  }
+}

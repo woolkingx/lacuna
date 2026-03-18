@@ -1,0 +1,11 @@
+{
+  "description": "URL template variable fingerprinting reduction",
+  "category": "privacy",
+  "directory": "124-toolkit",
+  "preferences": {
+    "patch.privacy.urlformatter.enabled": {
+      "value": true,
+      "description": "Blocks URL template variables (%LOCALE%, %VERSION%, etc.) from leaking system info in network requests."
+    }
+  }
+}

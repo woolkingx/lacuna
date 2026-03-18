@@ -1,0 +1,10 @@
+{
+  "description": "Privacy preferences for device",
+  "category": "device",
+  "directory": "115-hal",
+  "preferences": {
+    "device.sensors.enabled": false,
+    "device.sensors.motion.enabled": false,
+    "device.sensors.orientation.enabled": false
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "description": "Privacy preferences for RemoteSettings (whitelist mode + LibreWolf defense)",
+  "category": "services",
+  "directory": "134-services",
+  "preferences": {
+    "services.settings.server": "https://%.invalid"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "description": "Privacy preferences for DevTools source map",
+  "category": "browser",
+  "directory": "102-browser",
+  "preferences": {
+    "devtools.source-map.client-service.enabled": false
+  }
+}

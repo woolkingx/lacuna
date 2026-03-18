@@ -1,0 +1,159 @@
+diff --git a/netwerk/protocol/http/nsHttpChannel.cpp b/netwerk/protocol/http/nsHttpChannel.cpp
+index af4c6482ad..237f82a937 100644
+--- a/netwerk/protocol/http/nsHttpChannel.cpp
++++ b/netwerk/protocol/http/nsHttpChannel.cpp
+@@ -10332,7 +10332,7 @@ static bool HasNullRequestOrigin(nsHttpChannel* aChannel, nsIURI* aURI,
+     }
+   }
+ 
+-  // Step 2. Return request’s origin, serialized.
++  // Step 2. Return request's origin, serialized.
+   return false;
+ }
+ 
+@@ -10356,32 +10356,77 @@ void nsHttpChannel::SetOriginHeader() {
+   Unused << mRequestHead.GetHeader(nsHttp::Origin, existingHeader);
+   if (!existingHeader.IsEmpty()) {
+     LOG(("nsHttpChannel::SetOriginHeader Origin header already present"));
+-    auto const shouldNullifyOriginHeader =
+-        [&existingHeader, isAddonRequest](nsHttpChannel* aChannel) {
++    // LACUNA PATCH: Refactored to return URI for addon origin check
++    auto const getPossiblyNullOriginURI =
++        [&existingHeader, isAddonRequest](
++            nsHttpChannel* aChannel) -> already_AddRefed<nsIURI> {
+           nsCOMPtr<nsIURI> uri;
+           nsresult rv = NS_NewURI(getter_AddRefs(uri), existingHeader);
+           if (NS_FAILED(rv)) {
+-            return false;
++            return nullptr;
+           }
+ 
+           if (HasNullRequestOrigin(aChannel, uri, isAddonRequest)) {
+-            return true;
++            return nullptr;
+           }
+ 
+           nsCOMPtr<nsILoadInfo> info = aChannel->LoadInfo();
+           if (info->GetTainting() == mozilla::LoadTainting::CORS) {
+-            return false;
++            return uri.forget();
+           }
+ 
+-          return ReferrerInfo::ShouldSetNullOriginHeader(aChannel, uri);
++          if (ReferrerInfo::ShouldSetNullOriginHeader(aChannel, uri)) {
++            return nullptr;
++          }
++          return uri.forget();
+         };
++    // END LACUNA PATCH
+ 
+-    if (!existingHeader.EqualsLiteral("null") &&
+-        shouldNullifyOriginHeader(this)) {
++    nsCOMPtr<nsIURI> originURI = getPossiblyNullOriginURI(this);
++    if (!existingHeader.EqualsLiteral("null") && !originURI) {
+       LOG(("nsHttpChannel::SetOriginHeader null Origin by Referrer-Policy"));
+       MOZ_ALWAYS_SUCCEEDS(
+           mRequestHead.SetHeader(nsHttp::Origin, "null"_ns, false /* merge */));
+     }
++
++    // LACUNA PATCH: Addon Origin header behavior
++    if (isAddonRequest && !existingHeader.EqualsLiteral("null")) {
++      nsCOMPtr<nsIURI> addonURI;
++      if (!originURI) {
++        Unused << NS_NewURI(getter_AddRefs(addonURI), existingHeader);
++      } else {
++        addonURI = originURI;
++      }
++      if (addonURI && addonURI->SchemeIs("moz-extension")) {
++        switch (Preferences::GetUint("network.http.addonOriginBehavior", 0u)) {
++          case 3: {  // scramble: random UUID each time
++            nsAutoCString url;
++            url.AssignLiteral("moz-extension://");
++            nsID id = nsID::GenerateUUID();
++            char idString[NSID_LENGTH];
++            id.ToProvidedString(idString);
++            MOZ_RELEASE_ASSERT(
++                idString[0] == '{' && idString[NSID_LENGTH - 2] == '}',
++                "UUID generator did not return a valid UUID");
++            url.AppendASCII(idString + 1, NSID_LENGTH - 3);
++            MOZ_ALWAYS_SUCCEEDS(
++                mRequestHead.SetHeader(nsHttp::Origin, url, false));
++            return;
++          }
++          case 2:  // Firefox default: allow UUID through
++            return;
++          case 1:  // strip header entirely
++            Unused << mRequestHead.ClearHeader(nsHttp::Origin);
++            return;
++          case 0:  // null origin (safest)
++          default:
++            MOZ_ALWAYS_SUCCEEDS(mRequestHead.SetHeader(nsHttp::Origin,
++                                                       "null"_ns, false));
++            return;
++        }
++      }
++    }
++    // END LACUNA PATCH
+     return;
+   }
+ 
+@@ -10415,8 +10460,39 @@ void nsHttpChannel::SetOriginHeader() {
+     }
+   }
+ 
+-  // Step 2. If request’s response tainting is "cors" or request’s mode is
+-  // "websocket", then append (`Origin`, serializedOrigin) to request’s header
++  // LACUNA PATCH: Addon Origin header behavior (new header path)
++  if ((isAddonRequest || (uri && uri->SchemeIs("moz-extension"))) &&
++      !serializedOrigin.EqualsLiteral("null")) {
++    switch (Preferences::GetUint("network.http.addonOriginBehavior", 0u)) {
++      case 3: {  // scramble: random UUID each time
++        if (uri && uri->SchemeIs("moz-extension")) {
++          nsAutoCString url;
++          url.AssignLiteral("moz-extension://");
++          nsID id = nsID::GenerateUUID();
++          char idString[NSID_LENGTH];
++          id.ToProvidedString(idString);
++          MOZ_RELEASE_ASSERT(
++              idString[0] == '{' && idString[NSID_LENGTH - 2] == '}',
++              "UUID generator did not return a valid UUID");
++          url.AppendASCII(idString + 1, NSID_LENGTH - 3);
++          serializedOrigin = url;
++        }
++        break;
++      }
++      case 2:  // Firefox default: allow UUID through
++        break;
++      case 1:  // strip header entirely
++        return;
++      case 0:  // null origin (safest)
++      default:
++        serializedOrigin.AssignLiteral("null");
++        break;
++    }
++  }
++  // END LACUNA PATCH
++
++  // Step 2. If request's response tainting is "cors" or request's mode is
++  // "websocket", then append (`Origin`, serializedOrigin) to request's header
+   // list.
+   //
+   // Note: We don't handle "websocket" here (yet?).
+@@ -10426,7 +10502,7 @@ void nsHttpChannel::SetOriginHeader() {
+     return;
+   }
+ 
+-  // Step 3. Otherwise, if request’s method is neither `GET` nor `HEAD`, then:
++  // Step 3. Otherwise, if request's method is neither `GET` nor `HEAD`, then:
+   if (mRequestHead.IsGet() || mRequestHead.IsHead()) {
+     return;
+   }
+@@ -10446,7 +10522,7 @@ void nsHttpChannel::SetOriginHeader() {
+     }
+   }
+ 
+-  // Step 3.2. Append (`Origin`, serializedOrigin) to request’s header list.
++  // Step 3.2. Append (`Origin`, serializedOrigin) to request's header list.
+   MOZ_ALWAYS_SUCCEEDS(mRequestHead.SetHeader(nsHttp::Origin, serializedOrigin,
+                                              false /* merge */));
+ }

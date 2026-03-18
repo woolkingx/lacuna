@@ -1,0 +1,8 @@
+{
+  "description": "Privacy preferences for breakpad",
+  "category": "breakpad",
+  "directory": "142-toolkit",
+  "preferences": {
+    "breakpad.reportURL": ""
+  }
+}

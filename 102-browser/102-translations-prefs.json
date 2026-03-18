@@ -1,0 +1,10 @@
+{
+  "number": 102,
+  "directory": "browser",
+  "module": "translations",
+  "description": "Disable Firefox Translations to prevent automatic network requests",
+  "category": "translations",
+  "preferences": {
+    "browser.translations.enable": false
+  }
+}

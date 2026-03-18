@@ -1,0 +1,49 @@
+diff --git a/toolkit/xre/nsXREDirProvider.cpp b/toolkit/xre/nsXREDirProvider.cpp
+index 9c94cb8808..f8dfe05c03 100644
+--- a/toolkit/xre/nsXREDirProvider.cpp
++++ b/toolkit/xre/nsXREDirProvider.cpp
+@@ -1031,6 +1031,44 @@ nsresult nsXREDirProvider::GetUserDataDirectoryHome(nsIFile** aFile,
+   // Copied from nsAppFileLocationProvider (more or less)
+   nsCOMPtr<nsIFile> localDir;
+ 
++  // LACUNA PATCH: Portable mode - check for data/ folder next to executable
++  if (gDirServiceProvider && gDirServiceProvider->GetGREBinDir()) {
++    nsCOMPtr<nsIFile> portableDir;
++    nsresult rv = gDirServiceProvider->GetGREBinDir()->Clone(getter_AddRefs(portableDir));
++    if (NS_SUCCEEDED(rv)) {
++      rv = portableDir->Append(u"data"_ns);
++      if (NS_SUCCEEDED(rv)) {
++        bool exists = false;
++        portableDir->Exists(&exists);
++        if (exists) {
++          // Portable mode activated - use data/ directory
++          nsString path;
++          portableDir->GetPath(path);
++          printf("[LACUNA] Portable mode: Using existing data/ directory at %ls\n", path.get());
++          portableDir.forget(aFile);
++          return NS_OK;
++        } else {
++          // Create data/ directory if not exists
++          rv = portableDir->Create(nsIFile::DIRECTORY_TYPE, 0700);
++          nsString path;
++          portableDir->GetPath(path);
++          if (NS_SUCCEEDED(rv)) {
++            printf("[LACUNA] Portable mode: Created data/ directory at %ls\n", path.get());
++            portableDir.forget(aFile);
++            return NS_OK;
++          } else if (rv == NS_ERROR_FILE_ALREADY_EXISTS) {
++            printf("[LACUNA] Portable mode: Using data/ directory at %ls (already exists)\n", path.get());
++            portableDir.forget(aFile);
++            return NS_OK;
++          } else {
++            printf("[LACUNA] Portable mode: Failed to create data/ directory at %ls (error: 0x%X)\n", path.get(), static_cast<uint32_t>(rv));
++          }
++        }
++      }
++    }
++  }
++  // END LACUNA PATCH
++
+   if (aLocal && gDataDirHomeLocal) {
+     return gDataDirHomeLocal->Clone(aFile);
+   }

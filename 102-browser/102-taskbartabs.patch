@@ -1,0 +1,80 @@
+diff --git a/browser/modules/WindowsPreviewPerTab.sys.mjs b/browser/modules/WindowsPreviewPerTab.sys.mjs
+index 1dd226ec02..1bdfb7d9a1 100644
+--- a/browser/modules/WindowsPreviewPerTab.sys.mjs
++++ b/browser/modules/WindowsPreviewPerTab.sys.mjs
+@@ -68,8 +68,75 @@ ChromeUtils.defineESModuleGetters(lazy, {
+   PageThumbs: "resource://gre/modules/PageThumbs.sys.mjs",
+ });
+ 
++// LACUNA PATCH: Helper function to convert favicon data to data URI
++function convertFaviconToDataURI(faviconURI, callback) {
++  try {
++    PlacesUtils.favicons.getFaviconDataForPage(
++      faviconURI,
++      (iconURI, dataLen, data, mimeType) => {
++        if (data && data.length > 0) {
++          // Convert binary data to base64
++          let base64 = btoa(String.fromCharCode.apply(null, data));
++          let dataURI = `data:${mimeType};base64,${base64}`;
++          callback(dataURI);
++        } else {
++          callback(null);
++        }
++      }
++    );
++  } catch (e) {
++    callback(null);
++  }
++}
++// END LACUNA PATCH
++
+ // nsIURI -> imgIContainer
+ function _imageFromURI(uri, privateMode, callback) {
++  // LACUNA PATCH: Controllable favicon fetching strategy
++  // Prevents uncontrolled network requests while maintaining functionality
++  const allowNetwork = Services.prefs.getBoolPref(
++    "patch.browser.taskbar.previews.favicon.network",
++    false  // Default: cache-only mode (zero IP leak)
++  );
++
++  // Cache-only mode: prevent network leaks
++  if (!allowNetwork) {
++    const localProtocols = ["data", "chrome", "resource", "file", "about"];
++
++    // Handle cached-favicon: protocol
++    if (uri.scheme === "cached-favicon") {
++      // Extract actual URL from cached-favicon:https://example.com/favicon.ico
++      let actualURL = uri.spec.replace("cached-favicon:", "");
++
++      try {
++        let faviconURI = Services.io.newURI(actualURL);
++
++        // Attempt to get from Places cache
++        convertFaviconToDataURI(faviconURI, (dataURI) => {
++          if (dataURI) {
++            // Cache hit - use cached favicon as data: URI (zero network)
++            _imageFromURI(Services.io.newURI(dataURI), privateMode, callback);
++          } else {
++            // Cache miss - use default favicon (no network request)
++            _imageFromURI(PlacesUtils.favicons.defaultFavicon, privateMode, callback);
++          }
++        });
++        return;
++      } catch (e) {
++        // URI parsing failed - use default favicon
++        _imageFromURI(PlacesUtils.favicons.defaultFavicon, privateMode, callback);
++        return;
++      }
++    }
++
++    // Block network protocols (http:, https:)
++    if (!localProtocols.includes(uri.scheme)) {
++      _imageFromURI(PlacesUtils.favicons.defaultFavicon, privateMode, callback);
++      return;
++    }
++  }
++  // END LACUNA PATCH
++
+   let channel = NetUtil.newChannel({
+     uri,
+     loadUsingSystemPrincipal: true,

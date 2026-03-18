@@ -1,0 +1,44 @@
+diff --git a/modules/libpref/Preferences.cpp b/modules/libpref/Preferences.cpp
+index 82c9afe448..1ff866a959 100644
+--- a/modules/libpref/Preferences.cpp
++++ b/modules/libpref/Preferences.cpp
+@@ -4382,6 +4339,39 @@ already_AddRefed<nsIFile> Preferences::ReadSavedPrefs() {
+     return nullptr;
+   }
+
++  // LACUNA PATCH: Auto-copy prefs-template.js if prefs.js doesn't exist
++  bool prefsExists = false;
++  rv = file->Exists(&prefsExists);
++  if (NS_SUCCEEDED(rv) && !prefsExists) {
++    // prefs.js doesn't exist, try to copy from prefs-template.js
++    nsCOMPtr<nsIFile> exeDir;
++    rv = NS_GetSpecialDirectory(NS_GRE_DIR, getter_AddRefs(exeDir));
++    if (NS_SUCCEEDED(rv)) {
++      nsCOMPtr<nsIFile> templateFile;
++      rv = exeDir->Clone(getter_AddRefs(templateFile));
++      if (NS_SUCCEEDED(rv)) {
++        rv = templateFile->Append(u"prefs-template.js"_ns);
++        if (NS_SUCCEEDED(rv)) {
++          bool templateExists = false;
++          rv = templateFile->Exists(&templateExists);
++          if (NS_SUCCEEDED(rv) && templateExists) {
++            // Get profile directory from prefs.js path
++            nsCOMPtr<nsIFile> profileDir;
++            rv = file->GetParent(getter_AddRefs(profileDir));
++            if (NS_SUCCEEDED(rv)) {
++              // Copy template to profile as prefs.js
++              rv = templateFile->CopyTo(profileDir, u"prefs.js"_ns);
++              if (NS_SUCCEEDED(rv)) {
++                printf("Lacuna: Copied prefs-template.js to new profile\n");
++              }
++            }
++          }
++        }
++      }
++    }
++  }
++  // END LACUNA PATCH
++
+   rv = openPrefFile(file, PrefValueKind::User);
+   if (rv == NS_ERROR_FILE_NOT_FOUND) {
+     // This is a normal case for new users.

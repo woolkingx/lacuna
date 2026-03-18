@@ -1,0 +1,54 @@
+# Lacuna - Linux x64 native build
+ac_add_options --enable-application=browser
+ac_add_options --enable-bootstrap
+ac_add_options --disable-lto
+mk_add_options MOZ_MAKE_FLAGS="-j2"
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj-x86_64-pc-linux-gnu
+export MOZ_APP_NAME=lacuna
+
+# Branding
+ac_add_options --with-branding=browser/branding/official
+
+# Update Channel
+ac_add_options --enable-update-channel=release
+
+# ===== Compile-time module disabling =====
+
+## Telemetry
+export MOZ_TELEMETRY_REPORTING=
+mk_add_options MOZ_TELEMETRY_REPORTING=
+
+## Crashreporter
+ac_add_options --disable-crashreporter
+export MOZ_CRASHREPORTER=0
+mk_add_options MOZ_CRASHREPORTER=0
+
+## Data Reporting
+export MOZ_DATA_REPORTING=0
+mk_add_options MOZ_DATA_REPORTING=0
+
+## Updater
+ac_add_options --disable-updater
+
+## Parental Controls
+ac_add_options --disable-parental-controls
+
+## Debug
+ac_add_options --disable-debug
+ac_add_options --disable-debug-symbols
+ac_add_options --disable-debug-js-modules
+
+## Tests
+ac_add_options --disable-tests
+
+## DMD
+ac_add_options --disable-dmd
+
+## Extensions (allow unsigned)
+export MOZ_REQUIRE_SIGNING=
+ac_add_options --allow-addon-sideload
+ac_add_options --with-unsigned-addon-scopes=app,system
+
+## Binary optimization
+ac_add_options --enable-strip
+ac_add_options --enable-install-strip

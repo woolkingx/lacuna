@@ -1,0 +1,12 @@
+{
+  "description": "Font fingerprinting echo defense",
+  "category": "gfx",
+  "directory": "113-gfx",
+  "preferences": {
+    "patch.privacy.font.echo.enabled": {
+      "value": true,
+      "description": "Blocks font fingerprinting echo requests."
+    },
+    "font.system.whitelist": "Arial Times New Roman Courier New Georgia Verdana Trebuchet MS Liberation Sans Liberation Serif Liberation Mono DejaVu Sans DejaVu Serif DejaVu Sans Mono"
+  }
+}

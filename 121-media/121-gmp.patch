@@ -1,0 +1,19 @@
+diff --git a/toolkit/modules/GMPInstallManager.sys.mjs b/toolkit/modules/GMPInstallManager.sys.mjs
+index 2299f3b9c3..701307b845 100644
+--- a/toolkit/modules/GMPInstallManager.sys.mjs
++++ b/toolkit/modules/GMPInstallManager.sys.mjs
+@@ -338,6 +338,14 @@ GMPInstallManager.prototype = {
+       return Promise.reject({ type: "alreadycalled" });
+     }
+ 
++    // LACUNA PATCH: Control GMP network requests
++    // Prevents Chromium update service bypass even when user enables DRM
++    if (Services.prefs.getBoolPref("patch.media.gmp.enabled", true)) {
++      log.info("GMP network requests disabled by Lacuna patch");
++      return { usedFallback: true, addons: [] };
++    }
++    // END LACUNA PATCH
++
+     if (!GMPPrefs.getBool(GMPPrefs.KEY_UPDATE_ENABLED, true)) {
+       log.info("Updates are disabled via media.gmp-manager.updateEnabled");
+       return { usedFallback: true, addons: [] };

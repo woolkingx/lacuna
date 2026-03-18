@@ -1,0 +1,99 @@
+diff --git a/gfx/thebes/gfxPlatformFontList.cpp b/gfx/thebes/gfxPlatformFontList.cpp
+index 3128b88f75..f7d854ac00 100644
+--- a/gfx/thebes/gfxPlatformFontList.cpp
++++ b/gfx/thebes/gfxPlatformFontList.cpp
+@@ -32,6 +32,7 @@
+ #include "mozilla/Preferences.h"
+ #include "mozilla/StaticPrefs_gfx.h"
+ #include "mozilla/StaticPrefs_layout.h"
++#include "mozilla/StaticPrefs_patch.h"
+ #include "mozilla/glean/GfxMetrics.h"
+ #include "mozilla/TimeStamp.h"
+ #include "mozilla/dom/BlobImpl.h"
+@@ -1059,6 +1060,23 @@ void gfxPlatformFontList::GetFontList(nsAtom* aLangGroup,
+                                       nsTArray<nsString>& aListOfFonts) {
+   AutoLock lock(mLock);
+ 
++  // LACUNA PATCH: Return fixed default font list (anti-fingerprinting)
++  if (!mozilla::StaticPrefs::patch_privacy_font_echo_enabled()) {
++    static const char* kDefaultFonts[] = {
++      "Arial", "Times New Roman", "Courier New",
++      "Georgia", "Verdana", "Trebuchet MS",
++      "Liberation Sans", "Liberation Serif", "Liberation Mono",
++      "DejaVu Sans", "DejaVu Serif", "DejaVu Sans Mono"
++    };
++    for (const char* name : kDefaultFonts) {
++      aListOfFonts.AppendElement(
++          NS_ConvertUTF8toUTF16(nsDependentCString(name)));
++    }
++    aListOfFonts.Sort();
++    return;
++  }
++  // END LACUNA PATCH
++
+   if (SharedFontList()) {
+     fontlist::FontList* list = SharedFontList();
+     const fontlist::Family* families = list->Families();
+
+diff --git a/gfx/thebes/gfxUserFontSet.cpp b/gfx/thebes/gfxUserFontSet.cpp
+index c0ac18d669..0979586492 100644
+--- a/gfx/thebes/gfxUserFontSet.cpp
++++ b/gfx/thebes/gfxUserFontSet.cpp
+@@ -12,6 +12,7 @@
+ #include "mozilla/ProfilerLabels.h"
+ #include "mozilla/Services.h"
+ #include "mozilla/StaticPrefs_gfx.h"
++#include "mozilla/StaticPrefs_patch.h"
+ #include "mozilla/glean/GfxMetrics.h"
+ #include "mozilla/gfx/2D.h"
+ #include "gfxPlatformFontList.h"
+@@ -457,7 +458,22 @@ void gfxUserFontEntry::DoLoadNextSrc(bool aIsContinue) {
+       pfl->AddUserFontSet(fontSet);
+       // Don't look up local fonts if the font whitelist is being used.
+       gfxFontEntry* fe = nullptr;
+-      if (!pfl->IsFontFamilyWhitelistActive()) {
++      // LACUNA PATCH: Echo local() with default font (anti-fingerprinting)
++      if (!mozilla::StaticPrefs::patch_privacy_font_echo_enabled()) {
++        // When echo is active, resolve to a generic sans-serif font.
++        // This prevents fingerprinting via local() probing while still
++        // providing a valid font entry for rendering.
++        fe = gfxPlatform::GetPlatform()->LookupLocalFont(
++            fontSet->GetPresContext(), "Arial"_ns, Weight(), Stretch(),
++            SlantStyle());
++        if (!fe) {
++          // Fallback: try Liberation Sans (Linux)
++          fe = gfxPlatform::GetPlatform()->LookupLocalFont(
++              fontSet->GetPresContext(), "Liberation Sans"_ns, Weight(),
++              Stretch(), SlantStyle());
++        }
++      } else if (!pfl->IsFontFamilyWhitelistActive()) {
++      // END LACUNA PATCH
+         fe = gfxPlatform::GetPlatform()->LookupLocalFont(
+             fontSet->GetPresContext(), currSrc.mLocalName, Weight(), Stretch(),
+             SlantStyle());
+
+diff --git a/layout/style/FontFaceSet.cpp b/layout/style/FontFaceSet.cpp
+index 984bf79221..daaeaa2734 100644
+--- a/layout/style/FontFaceSet.cpp
++++ b/layout/style/FontFaceSet.cpp
+@@ -28,6 +28,7 @@
+ #include "mozilla/BasePrincipal.h"
+ #include "mozilla/Logging.h"
+ #include "mozilla/Preferences.h"
++#include "mozilla/StaticPrefs_patch.h"
+ #include "mozilla/PresShell.h"
+ #include "mozilla/PresShellInlines.h"
+ #include "mozilla/ServoBindings.h"
+@@ -170,6 +171,12 @@ already_AddRefed<Promise> FontFaceSet::Load(JSContext* aCx,
+ 
+ bool FontFaceSet::Check(const nsACString& aFont, const nsAString& aText,
+                         ErrorResult& aRv) {
++  // LACUNA PATCH: Echo font check - always return true (anti-fingerprinting)
++  if (!mozilla::StaticPrefs::patch_privacy_font_echo_enabled()) {
++    return true;
++  }
++  // END LACUNA PATCH
++
+   FlushUserFontSet();
+ 
+   nsTArray<FontFace*> faces;

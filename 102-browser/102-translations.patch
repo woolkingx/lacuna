@@ -1,0 +1,40 @@
+diff --git a/browser/components/preferences/main.js b/browser/components/preferences/main.js
+index 5878132edf..a1b846135e 100644
+--- a/browser/components/preferences/main.js
++++ b/browser/components/preferences/main.js
+@@ -1650,16 +1650,25 @@ var gMainPane = {
+       }
+     }
+ 
+-    TranslationsState.create().then(
+-      state => {
+-        this._translationsView = new TranslationsView(state);
+-      },
+-      error => {
+-        // This error can happen when a user is not connected to the internet, or
+-        // RemoteSettings is down for some reason.
+-        TranslationsView.showError("translations-manage-error-list", error);
+-      }
+-    );
++    // LACUNA PATCH: Lazy load translations - only load when settings button clicked
++    const settingsButton = document.getElementById("translations-manage-settings-button");
++    const loadTranslations = () => {
++      TranslationsState.create().then(
++        state => {
++          this._translationsView = new TranslationsView(state);
++        },
++        error => {
++          // This error can happen when a user is not connected to the internet, or
++          // RemoteSettings is down for some reason.
++          TranslationsView.showError("translations-manage-error-list", error);
++        }
++      );
++    };
++
++    if (settingsButton) {
++      settingsButton.addEventListener("command", loadTranslations, { once: true });
++    }
++    // END LACUNA PATCH
+   },
+ 
+   initPrimaryBrowserLanguageUI() {

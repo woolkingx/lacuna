@@ -1,0 +1,26 @@
+diff --git a/netwerk/protocol/http/nsHttpHandler.cpp b/netwerk/protocol/http/nsHttpHandler.cpp
+index 79e9310e05..feb408e7b6 100644
+--- a/netwerk/protocol/http/nsHttpHandler.cpp
++++ b/netwerk/protocol/http/nsHttpHandler.cpp
+@@ -111,9 +111,8 @@
+ #include "mozilla/net/HttpChannelChild.h"
+ 
+ #define UA_PREF_PREFIX "general.useragent."
+-#ifdef XP_WIN
+-#  define UA_SPARE_PLATFORM
+-#endif
++// LACUNA PATCH: Define UA_SPARE_PLATFORM unconditionally (not just Windows)
++#define UA_SPARE_PLATFORM
+ 
+ #define HTTP_PREF_PREFIX "network.http."
+ #define INTL_ACCEPT_LANGUAGES "intl.accept_languages"
+@@ -953,7 +952,8 @@ void nsHttpHandler::BuildUserAgent() {
+   mUserAgent += '/';
+   mUserAgent += mProductSub;
+ 
+-  bool isFirefox = mAppName.EqualsLiteral("Firefox");
++  // LACUNA PATCH: Force isFirefox true so UA always shows "Firefox/x.y"
++  bool isFirefox = true; // mAppName.EqualsLiteral("Firefox");
+   if (isFirefox || mCompatFirefoxEnabled) {
+     // "Firefox/x.y" (compatibility) app token
+     mUserAgent += ' ';

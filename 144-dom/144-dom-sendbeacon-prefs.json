@@ -1,0 +1,11 @@
+{
+  "description": "Privacy preferences for sendbeacon",
+  "category": "sendbeacon",
+  "directory": "144-dom",
+  "preferences": {
+    "patch.dom.sendbeacon.enabled": {
+      "value": true,
+      "description": "Blocks navigator.sendBeacon() API used for analytics/tracking pings."
+    }
+  }
+}

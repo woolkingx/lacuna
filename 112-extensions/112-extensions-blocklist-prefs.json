@@ -1,0 +1,11 @@
+{
+  "description": "Extension blocklist master switch - disables remote MLBF updates and entire blocklist mechanism",
+  "category": "extensions",
+  "directory": "112-extensions",
+  "preferences": {
+    "patch.extensions.blocklist.enabled": {
+      "value": true,
+      "description": "Blocks remote MLBF (Bloom filter) blocklist updates. Extensions remain installable."
+    }
+  }
+}

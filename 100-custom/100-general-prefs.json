@@ -1,0 +1,8 @@
+{
+  "description": "Privacy preferences for general",
+  "category": "general",
+  "directory": "100-custom",
+  "preferences": {
+    "general.autoScroll": false
+  }
+}

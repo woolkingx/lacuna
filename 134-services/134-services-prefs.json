@@ -1,0 +1,15 @@
+{
+  "description": "Privacy preferences for services",
+  "category": "services",
+  "directory": "134-services",
+  "preferences": {
+    "patch.services.settings.enabled": {
+      "value": true,
+      "description": "Blocks RemoteSettings from polling Mozilla's server. Uses local cache/dump fallback."
+    },
+    "patch.services.settings.attachments.enabled": {
+      "value": true,
+      "description": "Blocks RemoteSettings attachment downloads (e.g., fonts, ML models)."
+    }
+  }
+}

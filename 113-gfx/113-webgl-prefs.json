@@ -1,0 +1,9 @@
+{
+  "description": "Privacy preferences for webgl",
+  "category": "webgl",
+  "directory": "113-gfx",
+  "preferences": {
+    "webgl.enable-debug-renderer-info": false,
+    "webgl.enable-renderer-query": false
+  }
+}

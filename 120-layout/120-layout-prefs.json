@@ -1,0 +1,8 @@
+{
+  "description": "Privacy preferences for layout",
+  "category": "layout",
+  "directory": "120-layout",
+  "preferences": {
+    "layout.spellcheckDefault": 0
+  }
+}

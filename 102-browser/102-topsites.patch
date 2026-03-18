@@ -1,0 +1,30 @@
+diff --git a/browser/components/topsites/TopSites.sys.mjs b/browser/components/topsites/TopSites.sys.mjs
+index 5844c44e45..723b09c1a2 100644
+--- a/browser/components/topsites/TopSites.sys.mjs
++++ b/browser/components/topsites/TopSites.sys.mjs
+@@ -406,6 +406,12 @@ class _TopSites {
+   }
+ 
+   async _getRemoteConfig(firstTime = true) {
++    // LACUNA PATCH: Control RemoteSettings top-sites
++    if (Services.prefs.getBoolPref("patch.browser.topsites.enabled", true)) {
++      return [];  // Return empty array
++    }
++    // END LACUNA PATCH
++
+     if (!this._remoteConfig) {
+       this._remoteConfig = await lazy.RemoteSettings("top-sites");
+       this._remoteConfig.on("sync", () => {
+@@ -1180,6 +1186,12 @@ export class FaviconProvider {
+    * Get the tippy top collection from Remote Settings.
+    */
+   get tippyTop() {
++    // LACUNA PATCH: Control RemoteSettings tippytop
++    if (Services.prefs.getBoolPref("patch.browser.topsites.enabled", true)) {
++      return null;  // Return null
++    }
++    // END LACUNA PATCH
++
+     if (!this._tippyTop) {
+       this._tippyTop = lazy.RemoteSettings("tippytop");
+     }

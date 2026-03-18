@@ -1,0 +1,5 @@
+.backup/
+.cleanup/
+__pycache__/
+*.log
+*.pyc

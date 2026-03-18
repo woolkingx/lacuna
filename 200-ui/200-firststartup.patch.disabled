@@ -1,0 +1,21 @@
+diff --git a/toolkit/modules/FirstStartup.sys.mjs b/toolkit/modules/FirstStartup.sys.mjs
+index c09885abe9..1ad0929fbd 100644
+--- a/toolkit/modules/FirstStartup.sys.mjs
++++ b/toolkit/modules/FirstStartup.sys.mjs
+@@ -63,7 +63,15 @@ export var FirstStartup = {
+     let promises = [];
+ 
+     let normandyInitEndTime = null;
+-    if (AppConstants.MOZ_NORMANDY) {
++    // LACUNA PATCH: Check pref instead of compile-time constant
++    // Problem: AppConstants.MOZ_NORMANDY is compile-time, can't be disabled by pref
++    // Solution: Check app.normandy.enabled pref (default false in firefox.js.patch)
++    const normandyEnabled = Services.prefs.getBoolPref("app.normandy.enabled", false);
++    if (AppConstants.MOZ_NORMANDY && normandyEnabled) {
++      // Only init Normandy if both compile-time flag AND runtime pref are enabled
++      console.info("Lacuna: Normandy enabled, initializing in FirstStartup");
++      // END LACUNA PATCH
++
+       promises.push(
+         lazy.Normandy.init({ runAsync: false }).finally(() => {
+           normandyInitEndTime = Cu.now();

@@ -1,0 +1,54 @@
+diff --git a/browser/components/BrowserComponents.manifest b/browser/components/BrowserComponents.manifest
+index 7f4fb28f4e..91e88f41e2 100644
+--- a/browser/components/BrowserComponents.manifest
++++ b/browser/components/BrowserComponents.manifest
+@@ -86,7 +86,9 @@ category browser-quit-application-granted resource:///modules/Interactions.sys.m
+ category browser-quit-application-granted resource:///modules/pagedata/PageDataService.sys.mjs PageDataService.uninit
+ category browser-quit-application-granted resource://gre/modules/PageThumbs.sys.mjs PageThumbs.uninit
+ category browser-quit-application-granted resource://gre/modules/NewTabUtils.sys.mjs NewTabUtils.uninit
++#ifdef MOZ_NORMANDY
+ category browser-quit-application-granted resource://normandy/Normandy.sys.mjs Normandy.uninit
++#endif
+ category browser-quit-application-granted resource://gre/modules/RFPHelper.sys.mjs RFPHelper.uninit
+ category browser-quit-application-granted resource:///modules/asrouter/ASRouterNewTabHook.sys.mjs ASRouterNewTabHook.destroy
+ category browser-quit-application-granted moz-src:///browser/components/search/SERPCategorization.sys.mjs SERPCategorization.uninit
+
+diff --git a/browser/moz.configure b/browser/moz.configure
+index e8b401a7df..f19d5edf48 100644
+--- a/browser/moz.configure
++++ b/browser/moz.configure
+@@ -5,15 +5,15 @@
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+ imply_option("MOZ_PLACES", True)
+-imply_option("MOZ_SERVICES_HEALTHREPORT", True)
++imply_option("MOZ_SERVICES_HEALTHREPORT", False)
+ imply_option("MOZ_SERVICES_SYNC", True)
+ imply_option("MOZ_DEDICATED_PROFILES", True)
+ imply_option("MOZ_BLOCK_PROFILE_DOWNGRADE", True)
+-imply_option("MOZ_NORMANDY", True)
++imply_option("MOZ_NORMANDY", False)
+ imply_option("MOZ_PROFILE_MIGRATOR", True)
+ 
+ 
+-imply_option("MOZ_APP_VENDOR", "Mozilla")
++imply_option("MOZ_APP_VENDOR", "Lacuna")
+ imply_option("MOZ_APP_ID", "{ec8030f7-c20a-464f-9b0e-13a3a9e97384}")
+ # Include the DevTools client, not just the server (which is the default)
+ imply_option("MOZ_DEVTOOLS", "all")
+
+diff --git a/toolkit/components/moz.build b/toolkit/components/moz.build
+index 754c63f7c1..b40a62ffe2 100644
+--- a/toolkit/components/moz.build
++++ b/toolkit/components/moz.build
+@@ -135,7 +135,9 @@ if CONFIG["MOZ_WIDGET_TOOLKIT"] not in ("android", "windows"):
+     DIRS += ["aboutwebauthn"]
+ 
+ if CONFIG["MOZ_BUILD_APP"] == "browser":
+-    DIRS += ["messaging-system", "normandy"]
++    if CONFIG["MOZ_NORMANDY"]:
++        DIRS += ["normandy"]
++    DIRS += ["messaging-system"]
+ 
+ DIRS += ["nimbus"]
+ 

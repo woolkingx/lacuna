@@ -1,0 +1,18 @@
+{
+  "description": "Privacy preferences for extensions - disable auto-update, keep manual update",
+  "category": "extensions",
+  "directory": "112-extensions",
+  "preferences": {
+    "extensions.formautofill.creditCards.enabled": false,
+    "extensions.formautofill.addresses.enabled": false,
+    "extensions.update.enabled": false,
+    "extensions.update.autoUpdateDefault": false,
+    "extensions.getAddons.cache.enabled": false,
+    "extensions.abuseReport.enabled": false,
+    "extensions.systemAddon.update.enabled": false,
+    "extensions.htmlaboutaddons.recommendations.enabled": false,
+    "xpinstall.signatures.required": false,
+    "extensions.langpacks.signatures.required": false,
+    "privacy.resistFingerprinting.block_mozAddonManager": false
+  }
+}

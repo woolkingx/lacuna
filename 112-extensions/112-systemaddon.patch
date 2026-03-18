@@ -1,0 +1,18 @@
+diff --git a/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs b/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
+index 06166a4bf3..17586bc806 100644
+--- a/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
++++ b/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
+@@ -4280,6 +4280,13 @@ export var XPIInstall = {
+   },
+ 
+   async updateSystemAddons() {
++    // LACUNA PATCH: Prevent automatic system addon updates
++    if (Services.prefs.getBoolPref("patch.extensions.systemaddon.enabled", true)) {
++      logger.info("Lacuna: SystemAddon automatic updates disabled");
++      return;
++    }
++    // END LACUNA PATCH
++
+     let systemAddonLocation = XPIExports.XPIInternal.XPIStates.getLocation(
+       XPIExports.XPIInternal.KEY_APP_SYSTEM_ADDONS
+     );

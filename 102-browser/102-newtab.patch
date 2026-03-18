@@ -1,0 +1,19 @@
+diff --git a/browser/extensions/newtab/lib/DiscoveryStreamFeed.sys.mjs b/browser/extensions/newtab/lib/DiscoveryStreamFeed.sys.mjs
+index 4c38d130c7..e5db946466 100644
+--- a/browser/extensions/newtab/lib/DiscoveryStreamFeed.sys.mjs
++++ b/browser/extensions/newtab/lib/DiscoveryStreamFeed.sys.mjs
+@@ -568,6 +568,14 @@ export class DiscoveryStreamFeed {
+           }
+         );
+       } else {
++        // LACUNA PATCH: Low-level network exit interception
++        // Control Discovery Stream fetch from Pocket servers
++        if (Services.prefs.getBoolPref("patch.browser.newtab.enabled", true)) {
++          console.log("DiscoveryStream fetch blocked by patch.browser.newtab.enabled");
++          return null;  // Return null, do not affect other logic
++        }
++        // END LACUNA PATCH
++
+         fetchPromise = fetch(endpoint, {
+           ...options,
+           credentials: "omit",
