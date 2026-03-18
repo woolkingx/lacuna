@@ -1,0 +1,9 @@
+{
+  "description": "Disable automatic update checks to prevent connections to aus5.mozilla.org",
+  "prefs": {
+    "patch.app.update.enabled": {
+      "value": true,
+      "description": "Disables automatic Firefox application updates. Manual updates still work."
+    }
+  }
+}

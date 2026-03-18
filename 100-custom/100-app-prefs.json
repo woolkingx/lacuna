@@ -1,0 +1,14 @@
+{
+  "description": "Privacy preferences for app",
+  "category": "app",
+  "directory": "100-custom",
+  "preferences": {
+    "app.shield.optoutstudies.enabled": false,
+    "app.update.staging.enabled": false,
+    "app.update.BITS.enabled": false,
+    "app.update.interval": 86400,
+    "app.update.timerFirstInterval": 86400000,
+    "app.update.timerMinimumDelay": 86400,
+    "app.support.baseURL": "https://support.mozilla.org/"
+  }
+}

@@ -1,0 +1,7 @@
+.backup/
+**/.cleanup/
+.claude/
+.sessions/
+**/__pycache__/
+*.pyc
+*.log

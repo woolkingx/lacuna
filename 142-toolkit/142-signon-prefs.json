@@ -1,0 +1,12 @@
+{
+  "description": "Privacy preferences for signon",
+  "category": "signon",
+  "directory": "142-toolkit",
+  "preferences": {
+    "signon.rememberSignons": false,
+    "signon.autofillForms": false,
+    "signon.generation.enabled": false,
+    "signon.management.page.breach-alerts.enabled": false,
+    "signon.firefoxRelay.feature": ""
+  }
+}

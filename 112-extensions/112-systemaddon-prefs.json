@@ -1,0 +1,8 @@
+{
+  "description": "Block automatic SystemAddon updates",
+  "category": "extensions",
+  "directory": "112-extensions",
+  "preferences": {
+    "patch.extensions.systemaddon.enabled": true
+  }
+}

@@ -1,0 +1,18 @@
+diff --git a/toolkit/modules/Region.sys.mjs b/toolkit/modules/Region.sys.mjs
+index c5a40409de..3cd52c394e 100644
+--- a/toolkit/modules/Region.sys.mjs
++++ b/toolkit/modules/Region.sys.mjs
+@@ -225,6 +225,13 @@ class RegionDetector {
+    * Triggers fetching of the users current region. Exposed for tests.
+    */
+   async _fetchRegion() {
++    // FIREBOX PATCH: Set hardcoded region to avoid network detection
++    if (Services.prefs.getBoolPref("patch.browser.region.enabled", true)) {
++      const hardcodedRegion = Services.prefs.getStringPref("patch.browser.region.hardcoded", "US");
++      await this.#storeRegion(hardcodedRegion);
++      return;
++    }
++    // END FIREBOX PATCH
+     if (this._retryCount >= MAX_RETRIES) {
+       return;
+     }

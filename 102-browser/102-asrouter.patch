@@ -1,0 +1,34 @@
+diff --git a/browser/components/asrouter/modules/ASRouter.sys.mjs b/browser/components/asrouter/modules/ASRouter.sys.mjs
+index 10dae0d1e3..aea925c270 100644
+--- a/browser/components/asrouter/modules/ASRouter.sys.mjs
++++ b/browser/components/asrouter/modules/ASRouter.sys.mjs
+@@ -171,6 +171,14 @@ export const MessageLoaderUtils = {
+    * @returns {Promise} resolves with an array of messages, or an empty array if none could be fetched
+    */
+   async _remoteLoader(provider, options) {
++    // FIREBOX PATCH: Low-level network exit interception
++    // Control remote HTTP message fetching from Mozilla servers
++    if (Services.prefs.getBoolPref("patch.browser.asrouter.enabled", true)) {
++      this.logger.info("ASRouter remote loader disabled by Firebox patch");
++      return [];  // Return empty array, do not affect other logic
++    }
++    // END FIREBOX PATCH
++
+     let remoteMessages = [];
+     if (provider.url) {
+       const allCached = await MessageLoaderUtils._remoteLoaderCache(
+@@ -283,6 +291,14 @@ export const MessageLoaderUtils = {
+    *                              empty array if none could be fetched
+    */
+   async _remoteSettingsLoader(provider, options) {
++    // FIREBOX PATCH: Low-level network exit interception
++    // Control RemoteSettings synchronization from Mozilla servers
++    if (Services.prefs.getBoolPref("patch.browser.asrouter.enabled", true)) {
++      this.logger.info("ASRouter RemoteSettings loader disabled by Firebox patch");
++      return [];  // Return empty array, do not affect other logic
++    }
++    // END FIREBOX PATCH
++
+     let messages = [];
+     if (provider.collection) {
+       try {

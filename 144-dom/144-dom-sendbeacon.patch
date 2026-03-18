@@ -1,0 +1,25 @@
+diff --git a/dom/base/Navigator.cpp b/dom/base/Navigator.cpp
+index fac2759535..3b33585d93 100644
+--- a/dom/base/Navigator.cpp
++++ b/dom/base/Navigator.cpp
+@@ -36,6 +36,7 @@
+ #include "mozilla/StaticPrefs_media.h"
+ #include "mozilla/StaticPrefs_network.h"
+ #include "mozilla/StaticPrefs_pdfjs.h"
++#include "mozilla/StaticPrefs_patch.h"
+ #include "mozilla/StaticPrefs_privacy.h"
+ #include "mozilla/StorageAccess.h"
+ #include "BatteryManager.h"
+@@ -1308,6 +1309,12 @@ bool Navigator::SendBeaconInternal(const nsAString& aUrl,
+     cos->AddClassFlags(nsIClassOfService::Background);
+   }
+ 
++  // FIREBOX PATCH: Mock sendBeacon when disabled via pref
++  if (StaticPrefs::patch_dom_sendbeacon_enabled()) {
++    return true;
++  }
++  // END FIREBOX PATCH
++
+   // The channel needs to have a loadgroup associated with it, so that we can
+   // cancel the channel and any redirected channels it may create.
+   nsCOMPtr<nsILoadGroup> loadGroup = do_CreateInstance(NS_LOADGROUP_CONTRACTID);

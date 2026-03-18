@@ -1,0 +1,9 @@
+{
+  "description": "Force-install privacy extensions from AMO on first launch",
+  "category": "extensions",
+  "directory": "200-ui",
+  "preferences": {
+    "extensions.autoDisableScopes": 0,
+    "extensions.enabledScopes": 15
+  }
+}

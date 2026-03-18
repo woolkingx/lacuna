@@ -1,0 +1,10 @@
+{
+  "description": "Disable Firefox onboarding/about:welcome, use pref-pane instead",
+  "category": "welcome",
+  "directory": "200-ui",
+  "preferences": {
+    "browser.aboutwelcome.enabled": false,
+    "startup.homepage_welcome_url": "",
+    "startup.homepage_welcome_url.additional": ""
+  }
+}

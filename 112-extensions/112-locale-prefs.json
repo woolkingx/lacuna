@@ -1,0 +1,8 @@
+{
+  "description": "Block INTL_LOCALES_CHANGED triggering addon updates",
+  "category": "extensions",
+  "directory": "112-extensions",
+  "preferences": {
+    "patch.extensions.locale_trigger.enabled": true
+  }
+}

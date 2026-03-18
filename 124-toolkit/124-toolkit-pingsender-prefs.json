@@ -1,0 +1,6 @@
+{
+  "patch.telemetry.pingsender.enabled": {
+    "value": true,
+    "description": "Blocks telemetry ping sender."
+  }
+}

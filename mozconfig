@@ -1,0 +1,68 @@
+# Lacuna - Windows x64 cross-compile
+ac_add_options --enable-application=browser
+ac_add_options --target=x86_64-pc-windows-msvc
+ac_add_options --enable-bootstrap
+ac_add_options --disable-lto
+mk_add_options MOZ_MAKE_FLAGS="-j2"
+export MOZ_APP_NAME=lacuna
+
+# Branding
+ac_add_options --with-branding=browser/branding/official
+
+# Update Channel - 使用 release 而非 nightly
+# 影響 68 個 prefs 的預設值和行為
+ac_add_options --enable-update-channel=release
+
+# ===== 編譯時禁用模組 =====
+
+## 1. 遙測系統（Telemetry）
+export MOZ_TELEMETRY_REPORTING=
+mk_add_options MOZ_TELEMETRY_REPORTING=
+
+## 2. 崩潰報告（Crashreporter）
+ac_add_options --disable-crashreporter
+export MOZ_CRASHREPORTER=0
+mk_add_options MOZ_CRASHREPORTER=0
+
+## 3. 數據報告（Data Reporting）
+export MOZ_DATA_REPORTING=0
+mk_add_options MOZ_DATA_REPORTING=0
+
+## 4. 健康報告（Health Report）- 無法直接設定，只能 implied
+# export MOZ_SERVICES_HEALTHREPORT=0  # only accepts 'implied' values
+# mk_add_options MOZ_SERVICES_HEALTHREPORT=0
+
+## 5. 更新器（Updater）
+ac_add_options --disable-updater
+
+## 6. 更新代理（Update Agent）
+ac_add_options --disable-update-agent
+
+## 7. 預設瀏覽器代理（Default Browser Agent）
+ac_add_options --disable-default-browser-agent
+
+## 8. 家長控制（Parental Controls）
+ac_add_options --disable-parental-controls
+
+## 9. Necko WiFi 掃描器 - Windows Geolocation 依賴，無法禁用
+# ac_add_options --disable-necko-wifi
+
+## 10. 除錯相關（Debug）
+ac_add_options --disable-debug
+ac_add_options --disable-debug-symbols
+ac_add_options --disable-debug-js-modules
+
+## 11. 測試（Tests）
+ac_add_options --disable-tests
+
+## 12. DMD (Dark Matter Detector)
+ac_add_options --disable-dmd
+
+## 13. 擴展相關（允許未簽名）
+export MOZ_REQUIRE_SIGNING=
+ac_add_options --allow-addon-sideload
+ac_add_options --with-unsigned-addon-scopes=app,system
+
+## 14. 二進制優化
+ac_add_options --enable-strip
+ac_add_options --enable-install-strip

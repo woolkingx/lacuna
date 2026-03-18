@@ -1,0 +1,23 @@
+{
+  "description": "Disable Enhanced Tracking Protection (ETP) - redundant with Firebox network blocking",
+  "category": "privacy",
+  "directory": "100-custom",
+  "rationale": "Firebox already blocks all Mozilla network connections via patch.* prefs. ETP's tracker blacklist becomes useless when there are no connections. FPI (First Party Isolation) breaks OAuth/SSO and has global side effects. Container isolation provides better privacy control without breaking functionality.",
+  "preferences": {
+    "privacy.trackingprotection.enabled": false,
+    "privacy.trackingprotection.pbmode.enabled": false,
+    "privacy.trackingprotection.fingerprinting.enabled": false,
+    "privacy.trackingprotection.cryptomining.enabled": false,
+    "privacy.trackingprotection.socialtracking.enabled": false,
+    "privacy.trackingprotection.emailtracking.enabled": false,
+    "privacy.trackingprotection.emailtracking.pbmode.enabled": false,
+    "privacy.trackingprotection.annotate_channels": false,
+    "privacy.trackingprotection.lower_network_priority": false,
+    "privacy.firstparty.isolate": false,
+    "privacy.userContext.ui.enabled": true,
+    "privacy.globalprivacycontrol.enabled": false,
+    "privacy.antitracking.isolateContentScriptResources": true,
+    "privacy.query_stripping.enabled": true,
+    "privacy.query_stripping.enabled.pbmode": true
+  }
+}

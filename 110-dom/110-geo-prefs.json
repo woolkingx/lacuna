@@ -1,0 +1,8 @@
+{
+  "description": "Privacy preferences for geo",
+  "category": "geo",
+  "directory": "110-dom",
+  "preferences": {
+    "geo.enabled": false
+  }
+}

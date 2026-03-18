@@ -1,0 +1,15 @@
+{
+  "description": "Container + Fingerprint Integration (Pure Prefs, No Patch Required)",
+  "category": "container-fingerprint",
+  "directory": "190-container",
+  "preferences": {
+    "privacy.userContext.enabled": true,
+    "permissions.isolateBy.userContext": true,
+    "privacy.fingerprintingProtection": true,
+    "privacy.fingerprintingProtection.overrides": "+AllTargets,-CSSPrefersColorScheme,-SiteSpecificZoom",
+    "privacy.resistFingerprinting.randomization.daily_reset.enabled": false,
+    "privacy.resistFingerprinting.randomization.daily_reset.private.enabled": false,
+    "network.cookie.cookieBehavior": 4,
+    "network.cookie.lifetimePolicy": 0
+  }
+}

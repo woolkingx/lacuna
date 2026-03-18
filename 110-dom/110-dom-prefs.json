@@ -1,0 +1,14 @@
+{
+  "description": "Privacy preferences for dom",
+  "category": "dom",
+  "directory": "110-dom",
+  "preferences": {
+    "dom.push.enabled": false,
+    "dom.push.connection.enabled": false,
+    "dom.media.mediasession.enabled": false,
+    "dom.battery.enabled": false,
+    "dom.gamepad.enabled": false,
+    "dom.serviceWorkers.enabled": false,
+    "dom.webnotifications.enabled": false
+  }
+}

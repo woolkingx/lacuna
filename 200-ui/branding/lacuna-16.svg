@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+  <defs>
+    <linearGradient id="flameGrad16" x1="0.5" y1="1" x2="0.5" y2="0">
+      <stop offset="0%" stop-color="#ff6b1a"/>
+      <stop offset="100%" stop-color="#ffcc00"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect x="0" y="0" width="16" height="16" rx="3.5" ry="3.5" fill="#1a1a2e"/>
+
+  <!-- Flame (simplified at 16px — smaller, centered)
+    Center x=8, base y=11.5, tip y=5.5
+  -->
+  <path
+    d="M 8,11.5
+       C 5.5,10.5 5,7.5 6.5,6
+       C 7,5.25 7.5,5 8,5.5
+       C 8.5,5 9,5.25 9.5,6
+       C 11,7.5 10.5,10.5 8,11.5
+       Z"
+    fill="url(#flameGrad16)"
+    opacity="0.95"
+  />
+
+  <!-- Isometric cube wireframe — simplified at 16px (scale 0.125×)
+    w=3.5, h=2
+    top(8,4), right(11.5,6), bottom(8,8), left(4.5,6)
+    bl(4.5,10), bc(8,12), br(11.5,10)
+  -->
+  <g stroke="rgba(255,255,255,0.9)" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- Top face -->
+    <line x1="8" y1="4" x2="11.5" y2="6"/>
+    <line x1="11.5" y1="6" x2="8" y2="8"/>
+    <line x1="8" y1="8" x2="4.5" y2="6"/>
+    <line x1="4.5" y1="6" x2="8" y2="4"/>
+    <!-- Left face -->
+    <line x1="4.5" y1="6" x2="4.5" y2="10"/>
+    <line x1="8" y1="8" x2="8" y2="12"/>
+    <line x1="4.5" y1="10" x2="8" y2="12"/>
+    <!-- Right face -->
+    <line x1="11.5" y1="6" x2="11.5" y2="10"/>
+    <line x1="11.5" y1="10" x2="8" y2="12"/>
+  </g>
+</svg>

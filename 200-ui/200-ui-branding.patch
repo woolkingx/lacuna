@@ -1,0 +1,66 @@
+diff --git a/browser/branding/official/configure.sh b/browser/branding/official/configure.sh
+index 92ef14e03f..4e4599390e 100644
+--- a/browser/branding/official/configure.sh
++++ b/browser/branding/official/configure.sh
+@@ -2,4 +2,6 @@
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+-MOZ_APP_DISPLAYNAME=Firefox
++MOZ_APP_DISPLAYNAME=Lacuna
++MOZ_APP_BASENAME=Lacuna
++MOZ_APP_REMOTINGNAME=lacuna
+
+diff --git a/browser/branding/official/locales/en-US/brand.ftl b/browser/branding/official/locales/en-US/brand.ftl
+index 8496cb22ff..5a8ab9b254 100644
+--- a/browser/branding/official/locales/en-US/brand.ftl
++++ b/browser/branding/official/locales/en-US/brand.ftl
+@@ -16,12 +16,12 @@
+ ## For further details, consult:
+ ## https://mozilla-l10n.github.io/styleguides/mozilla_general/#brands-copyright-and-trademark
+ 
+--brand-shorter-name = Firefox
+--brand-short-name = Firefox
+--brand-shortcut-name = Firefox
+--brand-full-name = Mozilla Firefox
++-brand-shorter-name = Lacuna
++-brand-short-name = Lacuna
++-brand-shortcut-name = Lacuna
++-brand-full-name = Lacuna
+ # This brand name can be used in messages where the product name needs to
+ # remain unchanged across different versions (Nightly, Beta, etc.).
+--brand-product-name = Firefox
+--vendor-short-name = Mozilla
+-trademarkInfo = Firefox and the Firefox logos are trademarks of the Mozilla Foundation.
++-brand-product-name = Lacuna
++-vendor-short-name = Lacuna
++trademarkInfo = { "" }
+
+diff --git a/browser/branding/official/locales/en-US/brand.properties b/browser/branding/official/locales/en-US/brand.properties
+index e199526902..b2ed6b2639 100644
+--- a/browser/branding/official/locales/en-US/brand.properties
++++ b/browser/branding/official/locales/en-US/brand.properties
+@@ -2,6 +2,6 @@
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+-brandShorterName=Firefox
+-brandShortName=Firefox
+-brandFullName=Mozilla Firefox
++brandShorterName=Lacuna
++brandShortName=Lacuna
++brandFullName=Lacuna
+
+diff --git a/config/create_rc.py b/config/create_rc.py
+index ea290637ba..bded09dd2a 100644
+--- a/config/create_rc.py
++++ b/config/create_rc.py
+@@ -181,7 +181,7 @@ def last_winversion_segment(buildid, app_version_display):
+             hours_from_milestone_date = min(
+                 int(time_delta.total_seconds() / 3600), MAX_VALUE
+             )
+-    except MissingVCSTool:
++    except (MissingVCSTool, Exception):
+         # If we're here we can't use the VCS to determine the time differential, so
+         # we'll just set it to the maximum value instead of doing something weird.
+         hours_from_milestone_date = MAX_VALUE

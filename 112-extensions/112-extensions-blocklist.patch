@@ -1,0 +1,31 @@
+diff --git a/toolkit/mozapps/extensions/Blocklist.sys.mjs b/toolkit/mozapps/extensions/Blocklist.sys.mjs
+index a0a5e8ac8e..fe0cf55dfd 100644
+--- a/toolkit/mozapps/extensions/Blocklist.sys.mjs
++++ b/toolkit/mozapps/extensions/Blocklist.sys.mjs
+@@ -951,6 +951,14 @@ const ExtensionBlocklistMLBF = {
+   },
+ 
+   async _fetchMLBF(recordHardBlocks, recordSoftBlocks) {
++    // FIREBOX PATCH: Block remote MLBF updates, rely on local dump
++    if (Services.prefs.getBoolPref("patch.extensions.blocklist.enabled", true)) {
++      return {
++        mlbf: this._mlbfData ?? null,
++        mlbfSoftBlocks: this._mlbfDataSoftBlocks ?? null,
++      };
++    }
++    // END FIREBOX PATCH
+     const [mlbfRes, mlbfSoftBlocksRes] = await Promise.allSettled([
+       this._getMLBFData(
+         recordHardBlocks,
+@@ -1452,6 +1460,11 @@ export let Blocklist = {
+   },
+ 
+   _init() {
++    // FIREBOX PATCH: Master switch - disable entire blocklist mechanism
++    if (Services.prefs.getBoolPref("patch.extensions.blocklist.enabled", true)) {
++      Services.prefs.setBoolPref("extensions.blocklist.enabled", false);
++    }
++    // END FIREBOX PATCH
+     Services.obs.addObserver(this, "xpcom-shutdown");
+     gLoggingEnabled = Services.prefs.getBoolPref(
+       PREF_EM_LOGGING_ENABLED,

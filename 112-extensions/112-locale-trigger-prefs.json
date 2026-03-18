@@ -1,0 +1,15 @@
+{
+  "description": "Privacy preferences for SystemAddon and locale-triggered updates",
+  "category": "extensions",
+  "directory": "112-extensions",
+  "preferences": {
+    "patch.extensions.locale_trigger.enabled": {
+      "value": true,
+      "description": "Prevents locale change events from triggering automatic add-on update checks."
+    },
+    "patch.extensions.systemaddon.enabled": {
+      "value": true,
+      "description": "Blocks automatic SystemAddon updates from Mozilla's server."
+    }
+  }
+}

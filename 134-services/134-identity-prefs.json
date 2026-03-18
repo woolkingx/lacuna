@@ -1,0 +1,8 @@
+{
+  "description": "Privacy preferences for identity",
+  "category": "identity",
+  "directory": "134-services",
+  "preferences": {
+    "identity.fxaccounts.enabled": false
+  }
+}

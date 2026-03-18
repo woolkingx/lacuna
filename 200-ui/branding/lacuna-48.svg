@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <defs>
+    <linearGradient id="flameGrad48" x1="0.5" y1="1" x2="0.5" y2="0">
+      <stop offset="0%" stop-color="#ff6b1a"/>
+      <stop offset="100%" stop-color="#ffcc00"/>
+    </linearGradient>
+    <filter id="flameGlow48" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="1.2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect x="0" y="0" width="48" height="48" rx="10" ry="10" fill="#1a1a2e"/>
+
+  <!-- Flame (scaled 48/128 = 0.375×) -->
+  <!--
+    Original center (64,64) → (24,24)
+    Flame base (64,85)→(24,31.9), tip (64,44)→(24,16.5)
+    Scale factor: 0.375
+  -->
+  <path
+    d="M 24,32
+       C 16.5,29.25 15,23.25 18,19.5
+       C 19.5,17.25 21,15 24,16.5
+       C 27,15 28.5,17.25 30,19.5
+       C 33,23.25 31.5,29.25 24,32
+       Z"
+    fill="url(#flameGrad48)"
+    filter="url(#flameGlow48)"
+    opacity="0.95"
+  />
+
+  <!-- Inner flame highlight -->
+  <path
+    d="M 24,30
+       C 20.25,27.75 19.5,24 21.375,21
+       C 22.125,19.5 23.25,18 24,18.75
+       C 24.75,18 25.875,19.5 26.625,21
+       C 28.5,24 27.75,27.75 24,30
+       Z"
+    fill="#ffee88"
+    opacity="0.55"
+  />
+
+  <!-- Isometric cube wireframe (scaled 0.375×, center at 24,24)
+    top(24,12), right(34.5,18), bottom(24,24), left(13.5,18)
+    bl(13.5,30), bc(24,36), br(34.5,30)
+  -->
+  <g stroke="rgba(255,255,255,0.85)" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- Top face -->
+    <line x1="24" y1="12" x2="34.5" y2="18"/>
+    <line x1="34.5" y1="18" x2="24" y2="24"/>
+    <line x1="24" y1="24" x2="13.5" y2="18"/>
+    <line x1="13.5" y1="18" x2="24" y2="12"/>
+    <!-- Left face -->
+    <line x1="13.5" y1="18" x2="13.5" y2="30"/>
+    <line x1="24" y1="24" x2="24" y2="36"/>
+    <line x1="13.5" y1="30" x2="24" y2="36"/>
+    <!-- Right face -->
+    <line x1="34.5" y1="18" x2="34.5" y2="30"/>
+    <line x1="34.5" y1="30" x2="24" y2="36"/>
+  </g>
+</svg>

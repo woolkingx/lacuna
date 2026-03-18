@@ -1,0 +1,23 @@
+{
+  "description": "Privacy preferences for toolkit",
+  "category": "toolkit",
+  "directory": "142-toolkit",
+  "preferences": {
+    "patch.app.update.enabled": {
+      "value": true,
+      "description": "Disables automatic Firefox application updates. Manual updates still work."
+    },
+    "app.update.enabled": false,
+    "app.update.auto": false,
+    "toolkit.telemetry.unified": false,
+    "toolkit.telemetry.archive.enabled": false,
+    "toolkit.telemetry.newProfilePing.enabled": false,
+    "toolkit.telemetry.updatePing.enabled": false,
+    "toolkit.telemetry.bhrPing.enabled": false,
+    "toolkit.telemetry.firstShutdownPing.enabled": false,
+    "toolkit.telemetry.shutdownPingSender.enabled": false,
+    "toolkit.telemetry.dailyPing.enabled": false,
+    "toolkit.coverage.enabled": false,
+    "toolkit.coverage.endpoint.base": ""
+  }
+}

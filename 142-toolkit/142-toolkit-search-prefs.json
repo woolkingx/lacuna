@@ -1,0 +1,11 @@
+{
+  "description": "Search engine filtering - DDG only as default",
+  "category": "toolkit",
+  "directory": "142-toolkit",
+  "preferences": {
+    "patch.search.engines.enabled": {
+      "value": true,
+      "description": "Filters search engines to only DDG as default, removing other pre-installed engines."
+    }
+  }
+}

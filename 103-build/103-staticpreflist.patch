@@ -1,0 +1,35 @@
+diff --git a/modules/libpref/init/StaticPrefList.yaml b/modules/libpref/init/StaticPrefList.yaml
+index 283167eb4d..e04c9cb48e 100644
+--- a/modules/libpref/init/StaticPrefList.yaml
++++ b/modules/libpref/init/StaticPrefList.yaml
+@@ -15390,6 +15390,30 @@
+   value: 5000
+   mirror: always
+ 
++#---------------------------------------------------------------------------
++# FIREBOX PATCH: Prefs starting with "patch." (C++ StaticPrefs only)
++# Only prefs accessed via StaticPrefs:: in C++ code go here.
++# JS-only patch.* prefs are defined via prefs-template.js, not here.
++#---------------------------------------------------------------------------
++
++# Control font fingerprinting echo defense (gfxPlatformFontList.cpp)
++# false = echo active (default: anti-fingerprinting ON)
++# true = normal browser behavior
++- name: patch.privacy.font.echo.enabled
++  type: bool
++  value: true
++  mirror: always
++
++# Control sendBeacon network transmission (dom/base/Navigator.cpp)
++# false = mock no-op (default: block sendBeacon)
++# true = normal sendBeacon behavior
++- name: patch.dom.sendbeacon.enabled
++  type: bool
++  value: true
++  mirror: always
++
++# END FIREBOX PATCH
++
+ #---------------------------------------------------------------------------
+ # Prefs starting with "pdfjs."
+ #---------------------------------------------------------------------------

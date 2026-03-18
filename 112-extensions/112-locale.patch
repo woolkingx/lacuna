@@ -1,0 +1,18 @@
+diff --git a/toolkit/mozapps/extensions/AddonManager.sys.mjs b/toolkit/mozapps/extensions/AddonManager.sys.mjs
+index e09ea87de8..730f39ec3f 100644
+--- a/toolkit/mozapps/extensions/AddonManager.sys.mjs
++++ b/toolkit/mozapps/extensions/AddonManager.sys.mjs
+@@ -1061,6 +1061,13 @@ var AddonManagerInternal = {
+   observe(aSubject, aTopic, aData) {
+     switch (aTopic) {
+       case INTL_LOCALES_CHANGED: {
++        // FIREBOX PATCH: Prevent locale changes from triggering addon repository updates
++        if (Services.prefs.getBoolPref("patch.extensions.locale_trigger.enabled", true)) {
++          logger.info("Firebox: AddonManager locale-triggered update disabled");
++          return;
++        }
++        // END FIREBOX PATCH
++
+         // Asynchronously fetch and update the addons cache.
+         lazy.AddonRepository.backgroundUpdateCheck();
+         return;

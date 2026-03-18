@@ -1,0 +1,10 @@
+{
+  "description": "Privacy preferences for datareporting",
+  "category": "datareporting",
+  "directory": "142-toolkit",
+  "preferences": {
+    "datareporting.policy.dataSubmissionEnabled": false,
+    "datareporting.healthreport.uploadEnabled": false,
+    "datareporting.usage.uploadEnabled": false
+  }
+}

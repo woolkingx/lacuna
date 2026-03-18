@@ -1,0 +1,111 @@
+diff --git a/modules/libpref/Preferences.cpp b/modules/libpref/Preferences.cpp
+index 82c9afe448..1ff866a959 100644
+--- a/modules/libpref/Preferences.cpp
++++ b/modules/libpref/Preferences.cpp
+@@ -3580,24 +3580,9 @@ static const char kChannelPref[] = "app.update.channel";
+ #ifdef MOZ_WIDGET_ANDROID
+ 
+ static Maybe<bool> TelemetryPrefValue() {
+-  // Leave it unchanged if it's already set.
+-  // XXX: how could it already be set?
+-  if (Preferences::GetType(kTelemetryPref) != nsIPrefBranch::PREF_INVALID) {
+-    return Nothing();
+-  }
+-
+-  // Determine the correct default for toolkit.telemetry.enabled. If this
+-  // build has MOZ_TELEMETRY_ON_BY_DEFAULT *or* we're on the beta channel,
+-  // telemetry is on by default, otherwise not. This is necessary so that
+-  // beta users who are testing final release builds don't flipflop defaults.
+-#  ifdef MOZ_TELEMETRY_ON_BY_DEFAULT
+-  return Some(true);
+-#  else
+-  nsAutoCString channelPrefValue;
+-  Unused << Preferences::GetCString(kChannelPref, channelPrefValue,
+-                                    PrefValueKind::Default);
+-  return Some(channelPrefValue.EqualsLiteral("beta"));
+-#  endif
++  // FIREBOX PATCH: Force telemetry default to OFF at compile time
++  return Some(false);
++  // END FIREBOX PATCH
+ }
+ 
+ /* static */
+@@ -3614,36 +3599,8 @@ void Preferences::SetupTelemetryPref() {
+ #else  // !MOZ_WIDGET_ANDROID
+ 
+ static bool TelemetryPrefValue() {
+-  // For platforms with Unified Telemetry (here meaning not-Android),
+-  // toolkit.telemetry.enabled determines whether we send "extended" data.
+-  // We only want extended data from pre-release channels due to size.
+-
+-  constexpr auto channel = MOZ_STRINGIFY(MOZ_UPDATE_CHANNEL) ""_ns;
+-
+-  // Easy cases: Nightly, Aurora, Beta.
+-  if (channel.EqualsLiteral("nightly") || channel.EqualsLiteral("aurora") ||
+-      channel.EqualsLiteral("beta")) {
+-    return true;
+-  }
+-
+-#  ifndef MOZILLA_OFFICIAL
+-  // Local developer builds: non-official builds on the "default" channel.
+-  if (channel.EqualsLiteral("default")) {
+-    return true;
+-  }
+-#  endif
+-
+-  // Release Candidate builds: builds that think they are release builds, but
+-  // are shipped to beta users.
+-  if (channel.EqualsLiteral("release")) {
+-    nsAutoCString channelPrefValue;
+-    Unused << Preferences::GetCString(kChannelPref, channelPrefValue,
+-                                      PrefValueKind::Default);
+-    if (channelPrefValue.EqualsLiteral("beta")) {
+-      return true;
+-    }
+-  }
+-
++  // FIREBOX PATCH: Force telemetry default to OFF at compile time
++  // END FIREBOX PATCH
+   return false;
+ }
+ 
+@@ -4382,6 +4339,39 @@ already_AddRefed<nsIFile> Preferences::ReadSavedPrefs() {
+     return nullptr;
+   }
+ 
++  // FIREBOX PATCH: Auto-copy prefs-template.js if prefs.js doesn't exist
++  bool prefsExists = false;
++  rv = file->Exists(&prefsExists);
++  if (NS_SUCCEEDED(rv) && !prefsExists) {
++    // prefs.js doesn't exist, try to copy from prefs-template.js
++    nsCOMPtr<nsIFile> exeDir;
++    rv = NS_GetSpecialDirectory(NS_GRE_DIR, getter_AddRefs(exeDir));
++    if (NS_SUCCEEDED(rv)) {
++      nsCOMPtr<nsIFile> templateFile;
++      rv = exeDir->Clone(getter_AddRefs(templateFile));
++      if (NS_SUCCEEDED(rv)) {
++        rv = templateFile->Append(u"prefs-template.js"_ns);
++        if (NS_SUCCEEDED(rv)) {
++          bool templateExists = false;
++          rv = templateFile->Exists(&templateExists);
++          if (NS_SUCCEEDED(rv) && templateExists) {
++            // Get profile directory from prefs.js path
++            nsCOMPtr<nsIFile> profileDir;
++            rv = file->GetParent(getter_AddRefs(profileDir));
++            if (NS_SUCCEEDED(rv)) {
++              // Copy template to profile as prefs.js
++              rv = templateFile->CopyTo(profileDir, u"prefs.js"_ns);
++              if (NS_SUCCEEDED(rv)) {
++                printf("Firebox: Copied prefs-template.js to new profile\n");
++              }
++            }
++          }
++        }
++      }
++    }
++  }
++  // END FIREBOX PATCH
++
+   rv = openPrefFile(file, PrefValueKind::User);
+   if (rv == NS_ERROR_FILE_NOT_FOUND) {
+     // This is a normal case for new users.

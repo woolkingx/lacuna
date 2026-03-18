@@ -1,0 +1,54 @@
+diff --git a/toolkit/components/search/SearchEngineSelector.sys.mjs b/toolkit/components/search/SearchEngineSelector.sys.mjs
+index ee32b05d72..4c37f7148b 100644
+--- a/toolkit/components/search/SearchEngineSelector.sys.mjs
++++ b/toolkit/components/search/SearchEngineSelector.sys.mjs
+@@ -101,6 +101,25 @@ export class SearchEngineSelector {
+     this._configurationOverrides = remoteSettingsData[1];
+     delete this._getConfigurationPromise;
+ 
++    // FIREBOX PATCH: Filter search engines to DDG only
++    if (Services.prefs.getBoolPref("patch.search.engines.enabled", true)) {
++      this._configuration = this._configuration.filter(record => {
++        if (record.recordType === "engine") {
++          return record.identifier === "ddg";
++        }
++        return true;
++      });
++      // Override default engines to DDG
++      for (let record of this._configuration) {
++        if (record.recordType === "defaultEngines") {
++          record.globalDefault = "ddg";
++          record.globalDefaultPrivate = "ddg";
++          record.specificDefaults = [];
++        }
++      }
++    }
++    // END FIREBOX PATCH
++
+     if (!this._configuration?.length) {
+       throw Components.Exception(
+         "Failed to get engine data from Remote Settings",
+@@ -242,6 +261,11 @@ export class SearchEngineSelector {
+    *   The new configuration object
+    */
+   _onConfigurationUpdated({ data: { current } }) {
++    // FIREBOX PATCH: Skip remote search engine updates
++    if (Services.prefs.getBoolPref("patch.search.engines.enabled", true)) {
++      return;
++    }
++    // END FIREBOX PATCH
+     this._configuration = current;
+ 
+     if (lazy.SearchUtils.rustSelectorFeatureGate) {
+@@ -268,6 +292,11 @@ export class SearchEngineSelector {
+    *   The new configuration object
+    */
+   _onConfigurationOverridesUpdated({ data: { current } }) {
++    // FIREBOX PATCH: Skip remote search engine override updates
++    if (Services.prefs.getBoolPref("patch.search.engines.enabled", true)) {
++      return;
++    }
++    // END FIREBOX PATCH
+     this._configurationOverrides = current;
+ 
+     if (lazy.SearchUtils.rustSelectorFeatureGate) {

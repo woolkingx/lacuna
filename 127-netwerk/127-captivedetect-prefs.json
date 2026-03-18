@@ -1,0 +1,8 @@
+{
+  "description": "Privacy preferences for captivedetect",
+  "category": "captivedetect",
+  "directory": "127-netwerk",
+  "preferences": {
+    "captivedetect.canonicalURL": ""
+  }
+}

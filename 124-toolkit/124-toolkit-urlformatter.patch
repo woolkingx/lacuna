@@ -1,0 +1,187 @@
+diff --git a/toolkit/components/urlformatter/URLFormatter.sys.mjs b/toolkit/components/urlformatter/URLFormatter.sys.mjs
+index fe94e14b2e..9e30cf3edf 100644
+--- a/toolkit/components/urlformatter/URLFormatter.sys.mjs
++++ b/toolkit/components/urlformatter/URLFormatter.sys.mjs
+@@ -36,6 +36,11 @@ export function nsURLFormatterService() {
+   });
+ 
+   ChromeUtils.defineLazyGetter(this, "OSVersion", function UFS_OSVersion() {
++    // FIREBOX PATCH: reduce URL fingerprinting
++    if (Services.prefs.getBoolPref("patch.privacy.urlformatter.enabled", true)) {
++      return encodeURIComponent("default");
++    }
++    // END FIREBOX PATCH
+     let OSVersion = "default";
+     let { sysinfo } = Services;
+     try {
+@@ -51,6 +56,11 @@ export function nsURLFormatterService() {
+     this,
+     "distribution",
+     function UFS_distribution() {
++      // FIREBOX PATCH: reduce URL fingerprinting
++      if (Services.prefs.getBoolPref("patch.privacy.urlformatter.enabled", true)) {
++        return { id: "default", version: "default" };
++      }
++      // END FIREBOX PATCH
+       let defaults = Services.prefs.getDefaultBranch(null);
+       let id = defaults.getCharPref(PREF_APP_DISTRIBUTION, "default");
+       let version = defaults.getCharPref(
+@@ -70,6 +80,11 @@ nsURLFormatterService.prototype = {
+   _defaults: {
+     LOCALE: () => Services.locale.appLocaleAsBCP47,
+     REGION() {
++      // FIREBOX PATCH: reduce URL fingerprinting
++      if (Services.prefs.getBoolPref("patch.privacy.urlformatter.enabled", true)) {
++        return "ZZ";
++      }
++      // END FIREBOX PATCH
+       try {
+         // When the geoip lookup failed to identify the region, we fallback to
+         // the 'ZZ' region code to mean 'unknown'.
+@@ -103,12 +118,22 @@ nsURLFormatterService.prototype = {
+       return Services.appinfo.platformVersion;
+     },
+     PLATFORMBUILDID() {
++      // FIREBOX PATCH: reduce URL fingerprinting
++      if (Services.prefs.getBoolPref("patch.privacy.urlformatter.enabled", true)) {
++        return "";
++      }
++      // END FIREBOX PATCH
+       return Services.appinfo.platformBuildID;
+     },
+     APP() {
+       return Services.appinfo.name.toLowerCase().replace(/ /, "");
+     },
+     OS() {
++      // FIREBOX PATCH: reduce URL fingerprinting
++      if (Services.prefs.getBoolPref("patch.privacy.urlformatter.enabled", true)) {
++        return "Linux";
++      }
++      // END FIREBOX PATCH
+       return Services.appinfo.OS;
+     },
+     XPCOMABI() {
+@@ -120,7 +145,14 @@ nsURLFormatterService.prototype = {
+     OS_VERSION() {
+       return this.OSVersion;
+     },
+-    CHANNEL: () => lazy.UpdateUtils.UpdateChannel,
++    CHANNEL() {
++      // FIREBOX PATCH: reduce URL fingerprinting
++      if (Services.prefs.getBoolPref("patch.privacy.urlformatter.enabled", true)) {
++        return "esr";
++      }
++      // END FIREBOX PATCH
++      return lazy.UpdateUtils.UpdateChannel;
++    },
+     MOZILLA_API_KEY: () => AppConstants.MOZ_MOZILLA_API_KEY,
+     GOOGLE_LOCATION_SERVICE_API_KEY: () =>
+       AppConstants.MOZ_GOOGLE_LOCATION_SERVICE_API_KEY,
+@@ -129,9 +161,19 @@ nsURLFormatterService.prototype = {
+     BING_API_CLIENTID: () => AppConstants.MOZ_BING_API_CLIENTID,
+     BING_API_KEY: () => AppConstants.MOZ_BING_API_KEY,
+     DISTRIBUTION() {
++      // FIREBOX PATCH: reduce URL fingerprinting
++      if (Services.prefs.getBoolPref("patch.privacy.urlformatter.enabled", true)) {
++        return "default";
++      }
++      // END FIREBOX PATCH
+       return this.distribution.id;
+     },
+     DISTRIBUTION_VERSION() {
++      // FIREBOX PATCH: reduce URL fingerprinting
++      if (Services.prefs.getBoolPref("patch.privacy.urlformatter.enabled", true)) {
++        return "default";
++      }
++      // END FIREBOX PATCH
+       return this.distribution.version;
+     },
+   },
+
+diff --git a/toolkit/modules/UpdateUtils.sys.mjs b/toolkit/modules/UpdateUtils.sys.mjs
+index 2c8a093013..1fbafa3a0e 100644
+--- a/toolkit/modules/UpdateUtils.sys.mjs
++++ b/toolkit/modules/UpdateUtils.sys.mjs
+@@ -96,6 +96,12 @@ export var UpdateUtils = {
+           replacement = locale;
+           break;
+         case "CHANNEL":
++          // FIREBOX PATCH: reduce URL fingerprinting
++          if (Services.prefs.getBoolPref("patch.privacy.urlformatter.enabled", true)) {
++            replacement = "esr";
++            break;
++          }
++          // END FIREBOX PATCH
+           replacement = this.UpdateChannel;
+           break;
+         case "PLATFORM_VERSION":
+@@ -105,9 +111,21 @@ export var UpdateUtils = {
+           replacement = getSystemCapabilities();
+           break;
+         case "DISTRIBUTION":
++          // FIREBOX PATCH: reduce URL fingerprinting
++          if (Services.prefs.getBoolPref("patch.privacy.urlformatter.enabled", true)) {
++            replacement = "default";
++            break;
++          }
++          // END FIREBOX PATCH
+           replacement = getDistributionPrefValue(PREF_APP_DISTRIBUTION);
+           break;
+         case "DISTRIBUTION_VERSION":
++          // FIREBOX PATCH: reduce URL fingerprinting
++          if (Services.prefs.getBoolPref("patch.privacy.urlformatter.enabled", true)) {
++            replacement = "default";
++            break;
++          }
++          // END FIREBOX PATCH
+           replacement = getDistributionPrefValue(PREF_APP_DISTRIBUTION_VERSION);
+           break;
+       }
+@@ -925,6 +943,11 @@ UpdateUtils.initPerInstallPrefs();
+ 
+ /* Get the distribution pref values, from defaults only */
+ function getDistributionPrefValue(aPrefName) {
++  // FIREBOX PATCH: reduce URL fingerprinting
++  if (Services.prefs.getBoolPref("patch.privacy.urlformatter.enabled", true)) {
++    return "default";
++  }
++  // END FIREBOX PATCH
+   let value = Services.prefs
+     .getDefaultBranch(null)
+     .getCharPref(aPrefName, "default");
+@@ -943,6 +966,11 @@ function getSystemCapabilities() {
+  * doesn't always provide RAM in multiples of 1024.
+  */
+ function getMemoryMB() {
++  // FIREBOX PATCH: reduce URL fingerprinting
++  if (Services.prefs.getBoolPref("patch.privacy.urlformatter.enabled", true)) {
++    return "unknown";
++  }
++  // END FIREBOX PATCH
+   let memoryMB = "unknown";
+   try {
+     memoryMB = Services.sysinfo.getProperty("memsize");
+@@ -959,6 +987,11 @@ function getMemoryMB() {
+  * Gets the supported CPU instruction set.
+  */
+ ChromeUtils.defineLazyGetter(lazy, "gInstructionSet", function aus_gIS() {
++  // FIREBOX PATCH: reduce URL fingerprinting
++  if (Services.prefs.getBoolPref("patch.privacy.urlformatter.enabled", true)) {
++    return "unknown";
++  }
++  // END FIREBOX PATCH
+   const CPU_EXTENSIONS = [
+     "hasSSE4_2",
+     "hasSSE4_1",
+@@ -1071,6 +1104,11 @@ ChromeUtils.defineLazyGetter(UpdateUtils, "ABI", function () {
+ });
+ 
+ ChromeUtils.defineLazyGetter(UpdateUtils, "OSVersion", function () {
++  // FIREBOX PATCH: reduce URL fingerprinting
++  if (Services.prefs.getBoolPref("patch.privacy.urlformatter.enabled", true)) {
++    return encodeURIComponent("Linux 6.12.1-1");
++  }
++  // END FIREBOX PATCH
+   let osVersion;
+   try {
+     osVersion =

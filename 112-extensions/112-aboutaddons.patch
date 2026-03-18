@@ -1,0 +1,17 @@
+diff --git a/toolkit/mozapps/extensions/content/aboutaddons.js b/toolkit/mozapps/extensions/content/aboutaddons.js
+index 4763221e86..87bc0d4222 100644
+--- a/toolkit/mozapps/extensions/content/aboutaddons.js
++++ b/toolkit/mozapps/extensions/content/aboutaddons.js
+@@ -3971,6 +3971,12 @@ class RecommendedAddonList extends HTMLElement {
+   }
+ 
+   async _loadCards() {
++    // FIREBOX PATCH: Don't call Discovery API if recommendations disabled
++    if (Services.prefs.getBoolPref("patch.extensions.htmlaboutaddons.recommendations.enabled", true)) {
++      return;  // Don't call DiscoveryAPI.getResults()
++    }
++    // END FIREBOX PATCH
++
+     let recommendedAddons;
+     try {
+       recommendedAddons = await DiscoveryAPI.getResults(this.preferClientId);

@@ -1,0 +1,23 @@
+{
+  "description": "Privacy preferences for media",
+  "category": "media",
+  "directory": "121-media",
+  "preferences": {
+    "patch.media.gmp.enabled": {
+      "value": true,
+      "description": "Blocks OpenH264 and Widevine CDM update checks from GMP manager."
+    },
+    "media.eme.enabled": false,
+    "media.videocontrols.picture-in-picture.enabled": false,
+    "media.hardwaremediakeys.enabled": false,
+    "media.gmp-gmpopenh264.enabled": false,
+    "media.gmp-gmpopenh264.visible": false,
+    "media.gmp-widevinecdm.enabled": false,
+    "media.gmp-widevinecdm.visible": false,
+    "media.gmp-manager.updateEnabled": false,
+    "media.navigator.enabled": false,
+    "media.peerconnection.ice.default_address_only": true,
+    "media.peerconnection.ice.no_host": true,
+    "media.peerconnection.ice.proxy_only_if_behind_proxy": true
+  }
+}

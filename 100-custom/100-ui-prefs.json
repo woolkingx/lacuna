@@ -1,0 +1,8 @@
+{
+  "description": "Privacy preferences for ui",
+  "category": "ui",
+  "directory": "100-custom",
+  "preferences": {
+    "ui.osk.enabled": false
+  }
+}

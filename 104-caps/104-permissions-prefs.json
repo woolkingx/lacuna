@@ -1,0 +1,8 @@
+{
+  "description": "Privacy preferences for permissions",
+  "category": "permissions",
+  "directory": "104-caps",
+  "preferences": {
+    "permissions.manager.defaultsUrl": ""
+  }
+}

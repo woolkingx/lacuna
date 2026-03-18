@@ -1,0 +1,70 @@
+diff --git a/services/settings/Utils.sys.mjs b/services/settings/Utils.sys.mjs
+index cbdf07bcda..82a8db75a6 100644
+--- a/services/settings/Utils.sys.mjs
++++ b/services/settings/Utils.sys.mjs
+@@ -97,6 +97,11 @@ const _cdnURLs = {};
+ 
+ export var Utils = {
+   get SERVER_URL() {
++    // FIREBOX PATCH: Disable RemoteSettings via pref
++    if (Services.prefs.getBoolPref("patch.services.settings.enabled", true)) {
++      return "https://%.invalid";  // Return invalid URL to prevent all RemoteSettings connections
++    }
++    // END FIREBOX PATCH
+     return lazy.allowServerURLOverride
+       ? lazy.gServerURL
+       : AppConstants.REMOTE_SETTINGS_SERVER_URL;
+@@ -133,6 +138,12 @@ export var Utils = {
+   },
+ 
+   get LOAD_DUMPS() {
++    // FIREBOX PATCH: Force local dumps when RS disabled or fallback active
++    if (Services.prefs.getBoolPref("patch.services.settings.enabled", true) ||
++        Services.prefs.getBoolPref("patch.services.settings.fallback.enabled", true)) {
++      return true;
++    }
++    // END FIREBOX PATCH
+     // Load dumps only if pulling data from the production server, or in tests.
+     return (
+       this.SERVER_URL == AppConstants.REMOTE_SETTINGS_SERVER_URL ||
+
+diff --git a/toolkit/components/search/SearchUtils.sys.mjs b/toolkit/components/search/SearchUtils.sys.mjs
+index 92bff60895..3ee4a915c5 100644
+--- a/toolkit/components/search/SearchUtils.sys.mjs
++++ b/toolkit/components/search/SearchUtils.sys.mjs
+@@ -179,16 +179,26 @@ export var SearchUtils = {
+     SEARCH_FORM: "searchform",
+   },
+ 
+-  ENGINES_URLS: {
+-    "prod-main":
+-      "https://firefox.settings.services.mozilla.com/v1/buckets/main/collections/search-config/records",
+-    "prod-preview":
+-      "https://firefox.settings.services.mozilla.com/v1/buckets/main-preview/collections/search-config/records",
+-    "stage-main":
+-      "https://firefox.settings.services.allizom.org/v1/buckets/main/collections/search-config/records",
+-    "stage-preview":
+-      "https://firefox.settings.services.allizom.org/v1/buckets/main-preview/collections/search-config/records",
++  // FIREBOX PATCH: Block search engine config remote fetching
++  get ENGINES_URLS() {
++    const blocked = !Services.prefs.getBoolPref(
++      "patch.services.settings.enabled",
++      false
++    );
++    return {
++      "prod-main": blocked
++        ? "https://%.invalid"
++        : "https://firefox.settings.services.mozilla.com/v1/buckets/main/collections/search-config/records",
++      "prod-preview": blocked
++        ? "https://%.invalid"
++        : "https://firefox.settings.services.mozilla.com/v1/buckets/main-preview/collections/search-config/records",
++      "stage-main":
++        "https://firefox.settings.services.allizom.org/v1/buckets/main/collections/search-config/records",
++      "stage-preview":
++        "https://firefox.settings.services.allizom.org/v1/buckets/main-preview/collections/search-config/records",
++    };
+   },
++  // END FIREBOX PATCH
+ 
+   // The following constants are left undocumented in nsISearchService.idl
+   // For the moment, they are meant for testing/debugging purposes only.
