@@ -1,0 +1,10 @@
+Mozilla Public License Version 2.0
+==================================
+
+This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this
+file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+This project is a fork of Mozilla Firefox (ESR).
+The original Firefox source code is also licensed under the Mozilla Public
+License 2.0. See https://hg.mozilla.org/mozilla-central/ for the upstream source.
