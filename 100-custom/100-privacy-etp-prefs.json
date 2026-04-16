@@ -1,11 +1,11 @@
 {
-  "description": "Disable Enhanced Tracking Protection (ETP) - redundant with Lacuna network blocking",
+  "description": "ETP Standard enabled - pairs with containTAB defaultContainer to avoid clean-container fingerprint",
   "category": "privacy",
   "directory": "100-custom",
   "rationale": "Lacuna already blocks all Mozilla network connections via patch.* prefs. ETP's tracker blacklist becomes useless when there are no connections. FPI (First Party Isolation) breaks OAuth/SSO and has global side effects. Container isolation provides better privacy control without breaking functionality.",
   "preferences": {
-    "privacy.trackingprotection.enabled": false,
-    "privacy.trackingprotection.pbmode.enabled": false,
+    "privacy.trackingprotection.enabled": true,
+    "privacy.trackingprotection.pbmode.enabled": true,
     "privacy.trackingprotection.fingerprinting.enabled": false,
     "privacy.trackingprotection.cryptomining.enabled": false,
     "privacy.trackingprotection.socialtracking.enabled": false,

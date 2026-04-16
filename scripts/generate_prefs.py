@@ -21,7 +21,7 @@ from pathlib import Path
 PATCH_DIR = Path(__file__).parent.parent
 LACUNA_DIR = PATCH_DIR.parent
 OUTPUT_FILE = PATCH_DIR / "100-custom" / "prefs-template.js"
-FIREFOX_REPOS = [LACUNA_DIR / "firefox-esr"]
+FIREFOX_REPOS = [LACUNA_DIR / "firefox-esr-140.9"]
 
 EXCLUDE_DIRS = {".cleanup", ".backup"}
 

@@ -2,6 +2,30 @@
 
 All notable changes to Lacuna are documented here.
 
+## [1.0.1] - 2026-04-16
+
+### Security
+- Rebased on Firefox ESR 140.9. Includes all upstream CVE fixes and security patches from Mozilla since ESR 140.0.
+
+### Extensions
+- Replaced CanvasBlocker with containTAB 0.2.2 (bundled)
+- containTAB policy: `normal_installed` (uses bundled xpi, no AMO fetch)
+- Removed CanvasBlocker from `policies.json`
+
+### Privacy
+- Enabled ETP Standard (`privacy.trackingprotection.enabled = true`)
+- Rationale: containTAB defaultContainer opens a fresh container per tab; an empty cookie store is itself a fingerprint. ETP Standard is the natural mitigation without patching or simulation.
+
+### Prefs
+- 235 privacy prefs (up from 232)
+- Added Windows JumpList privacy prefs (`browser.taskbar.lists.frequent/recent.enabled = false`)
+
+### Patches
+- 31 source patches (up from 30)
+- Added 102-browser-jumplist: disable frequent/recent history reading in Windows JumpList
+
+---
+
 ## [1.0.0] - 2026-03-18
 
 First public release. Based on Firefox ESR 140.

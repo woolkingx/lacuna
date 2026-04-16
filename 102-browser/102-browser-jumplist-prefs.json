@@ -1,0 +1,19 @@
+{
+  "description": "Windows JumpList privacy preferences",
+  "category": "browser",
+  "directory": "102-browser",
+  "preferences": {
+    "browser.taskbar.lists.frequent.enabled": {
+      "value": false,
+      "description": "Disables frequent sites in JumpList. Background timer reads moz_places history and sends data to Windows ICustomDestinationList API without user trigger."
+    },
+    "browser.taskbar.lists.recent.enabled": {
+      "value": false,
+      "description": "Disables recent sites in JumpList. Same background history read as frequent.enabled."
+    },
+    "browser.taskbar.lists.tasks.enabled": {
+      "value": true,
+      "description": "Keeps static tasks (New Tab, New Window, Private Window). No history access. Safe to retain."
+    }
+  }
+}

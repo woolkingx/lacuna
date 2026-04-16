@@ -18,7 +18,7 @@ from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 PATCH_DIR = SCRIPT_DIR.parent
-ESR_DIR = PATCH_DIR.parent / "firefox-esr"
+ESR_DIR = PATCH_DIR.parent / "firefox-esr-140.9"
 EXCLUDE_DIRS = {".cleanup", ".backup", "__pycache__"}
 
 # Files handled by other stages (not patches)

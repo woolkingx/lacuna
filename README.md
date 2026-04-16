@@ -9,11 +9,11 @@ Lacuna patches Firefox ESR to remove outbound network activity that happens with
 ## Features
 
 - **Zero background connections** — no telemetry, no pings, no auto-sync, no region detection. Silent until you click.
-- **232 privacy prefs** — every known Firefox phone-home disabled at startup via `prefs-template.js`.
-- **30 source patches** — code-level blocks on telemetry, Normandy, safe browsing, ASRouter, GMP, and more.
+- **235 privacy prefs** — every known Firefox phone-home disabled at startup via `prefs-template.js`.
+- **31 source patches** — code-level blocks on telemetry, Normandy, safe browsing, ASRouter, GMP, and more.
 - **Portable mode** — `data/` directory next to binary = self-contained profile. No install, no registry, fully movable.
 - **Dual platform** — Windows x64 (cross-compile) + Linux x64 (native). Same patches, same prefs.
-- **Bundled extensions** — uBlock Origin, Containerise, CanvasBlocker pre-installed on first launch.
+- **Bundled extensions** — uBlock Origin, containTAB pre-installed on first launch.
 - **Per-patch toggle** — every patch has an on/off switch in `about:preferences#lacuna`.
 - **Unsigned extension support** — install custom or self-built extensions without Mozilla signing. `xpinstall.signatures.required` disabled by default.
 - **Custom branding** — Lacuna name, icon, about dialog. No Firefox branding confusion.
@@ -30,13 +30,12 @@ Lacuna patches Firefox ESR to remove outbound network activity that happens with
 | Extension | Status | Why |
 |-----------|--------|-----|
 | **uBlock Origin** | **MUST INSTALL** | Blocks ads, trackers, malicious scripts. Without this, every website runs whatever JavaScript it wants against you. |
-| **Containerise** | **MUST INSTALL** | Isolates sites into containers. Without this, sites share cookies and storage across domains — login tracking, cross-site profiling, all of it. |
-| **CanvasBlocker** | Recommended | Canvas/WebGL fingerprint protection. Optional if `privacy.resistFingerprinting` is already enabled (default in Lacuna). |
+| **containTAB** | **MUST INSTALL** | Isolates each tab into its own container. Without this, sites share cookies and storage across domains — login tracking, cross-site profiling, all of it. Pairs with ETP Standard to avoid clean-container fingerprinting. |
 
-> **Do not skip uBlock Origin and Containerise.**
-> They are as important as the 232 patches. Lacuna blocks Firefox from phoning home. These extensions block websites from phoning home about you.
+> **Do not skip uBlock Origin and containTAB.**
+> They are as important as the 235 patches. Lacuna blocks Firefox from phoning home. These extensions block websites from phoning home about you.
 
-All three are bundled in the portable release and auto-installed on first launch.
+Both are bundled in the portable release and auto-installed on first launch.
 
 ## =================================================
 
@@ -75,7 +74,7 @@ The result: Firefox behaves like a local application. It fetches what you ask fo
 | DOM | `navigator.sendBeacon` (used for tracking) |
 | Fonts | Remote font fingerprint exposure |
 
-232 preferences, 30 patches. All individually toggleable via `about:preferences#lacuna`.
+235 preferences, 31 patches. All individually toggleable via `about:preferences#lacuna`.
 
 ---
 
@@ -93,7 +92,7 @@ The result: Firefox behaves like a local application. It fetches what you ask fo
 | Windows x64 | `lacuna.exe` | Cross-compile (`--target=x86_64-pc-windows-msvc`) |
 | Linux x64 | `lacuna` | Native build |
 
-Both builds include portable mode, bundled extensions, and 232 privacy prefs.
+Both builds include portable mode, bundled extensions, and 235 privacy prefs.
 
 ---
 
@@ -206,4 +205,4 @@ The fundamental difference: those projects configure Firefox. Lacuna patches it.
 
 ## Status
 
-Based on Firefox ESR 140. Windows x64 + Linux x64.
+Based on Firefox ESR 140.9. Windows x64 + Linux x64.
